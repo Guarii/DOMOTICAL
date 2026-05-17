@@ -100,6 +100,15 @@
         .chip { display: flex; align-items: center; gap: 5px; padding: 5px 12px; background: var(--primary-container); color: var(--primary); border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
         .chip span { cursor: pointer; font-size: 14px; }
 
+        /* Nuevos estilos para checkboxes y etiquetas de los productos */
+        .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 5px; margin-bottom: 15px;}
+        .checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; }
+        .checkbox-label input { width: auto; margin: 0; }
+        .filter-title { padding: 0 5%; font-weight: 600; font-size: 0.9rem; color: #555; margin-top: 15px; margin-bottom: 5px; }
+        .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+        .tag-room { background: #e8f0fe; color: #1a73e8; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+        .tag-type { background: #fce8e6; color: #d93025; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #333; color: white; padding: 10px 20px; border-radius: 50px; transition: 0.4s; z-index: 2000; }
         #toast.active { transform: translateX(-50%) translateY(0); }
         
@@ -146,7 +155,11 @@
         </div>
     </header>
 
-    <nav class="tabs" id="categoryTabs"></nav>
+    <div class="filter-title">Filtrar por Habitación:</div>
+    <nav class="tabs" id="roomTabs"></nav>
+    <div class="filter-title">Filtrar por Tipo de Dispositivo:</div>
+    <nav class="tabs" id="typeTabs"></nav>
+    
     <main id="productGrid"></main>
 
     <!-- Modal Carrito -->
@@ -174,12 +187,21 @@
         <div class="modal glass">
             <span class="material-symbols-rounded close" onclick="window.ui.toggleModal('adminDashboard', false)">close</span>
             
-            <h3>Gestionar Categorías</h3>
+            <h3>Gestionar Habitaciones</h3>
             <div style="display:flex; gap:8px; margin-top:10px;">
-                <input type="text" id="newCatInput" placeholder="Nombre de categoría...">
-                <button class="btn-full" style="width:auto; margin:0; padding:0 20px;" onclick="window.ui.addCategory()">Añadir</button>
+                <input type="text" id="newRoomInput" placeholder="Ej: Salón, Cocina, Exterior...">
+                <button class="btn-full" style="width:auto; margin:0; padding:0 20px;" onclick="window.ui.addCategory('room')">Añadir</button>
             </div>
-            <div id="adminCategoryList" class="chip-list"></div>
+            <div id="adminRoomList" class="chip-list"></div>
+
+            <hr style="opacity:0.1; margin:20px 0;">
+
+            <h3>Gestionar Tipos de Dispositivo</h3>
+            <div style="display:flex; gap:8px; margin-top:10px;">
+                <input type="text" id="newTypeInput" placeholder="Ej: Iluminación, Seguridad...">
+                <button class="btn-full" style="width:auto; margin:0; padding:0 20px;" onclick="window.ui.addCategory('type')">Añadir</button>
+            </div>
+            <div id="adminTypeList" class="chip-list"></div>
 
             <hr style="opacity:0.1; margin:20px 0;">
 
@@ -198,10 +220,17 @@
                     <div class="form-group"><label>Precio (€)</label><input type="number" id="pPrice" step="0.01"></div>
                     <div class="form-group"><label>Imagen (URL)</label><input type="text" id="pImg"></div>
                 </div>
+                
                 <div class="form-group">
-                    <label>Categoría</label>
-                    <select id="pCat"></select>
+                    <label>Asignar Habitaciones</label>
+                    <div id="pRoomsCheckboxes" class="checkbox-grid"></div>
                 </div>
+                
+                <div class="form-group">
+                    <label>Asignar Tipos de Dispositivo</label>
+                    <div id="pTypesCheckboxes" class="checkbox-grid"></div>
+                </div>
+
                 <button class="btn-full" id="saveBtn" onclick="window.ui.saveProduct()">Guardar Producto</button>
                 <button class="btn-full" id="cancelBtn" style="display:none; background:#888;" onclick="window.ui.resetForm()">Cancelar</button>
             </div>
@@ -223,13 +252,12 @@
         // ⚠️ ATENCIÓN: PEGA AQUÍ LA CONFIGURACIÓN DE TU PROYECTO DE FIREBASE ⚠️
         // ==============================================================================
         const firebaseConfig = {
-           apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
-           authDomain: "domotical-680de.firebaseapp.com",
-           projectId: "domotical-680de",
-           storageBucket: "domotical-680de.firebasestorage.app",
-           messagingSenderId: "923219132599",
-           appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
-           measurementId: "G-0J6JGDD1BK"
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
         };
         // ==============================================================================
 
@@ -249,9 +277,11 @@
 
         const store = {
             products: [],
-            categories: ['Seguridad', 'Iluminación', 'Climatización'], // Por defecto
+            rooms: ['Salón', 'Cocina', 'Dormitorio', 'Exterior'], // Bloque de categorías 1
+            types: ['Seguridad', 'Iluminación', 'Climatización', 'Energía'], // Bloque de categorías 2
             cart: [], // El carrito SIEMPRE se queda en LocalStorage
-            activeCat: 'Todos',
+            activeRoom: 'Todas',
+            activeType: 'Todos',
 
             async init() {
                 // Cargar carrito del usuario (memoria local)
@@ -268,11 +298,19 @@
                 try {
                     // 1. Cargar Categorías desde Firestore
                     const catDoc = await getDoc(doc(db, "config", "categories"));
-                    if (catDoc.exists() && catDoc.data().list) {
-                        this.categories = catDoc.data().list;
+                    if (catDoc.exists()) {
+                        const data = catDoc.data();
+                        // Migración automática para datos antiguos (convierte viejas categorías a tipos)
+                        if (data.list && !data.types) {
+                            this.types = data.list;
+                            await setDoc(doc(db, "config", "categories"), { rooms: this.rooms, types: this.types });
+                        } else {
+                            this.rooms = data.rooms || this.rooms;
+                            this.types = data.types || this.types;
+                        }
                     } else {
                         // Crear documento de categorías por defecto si no existe
-                        await setDoc(doc(db, "config", "categories"), { list: this.categories });
+                        await setDoc(doc(db, "config", "categories"), { rooms: this.rooms, types: this.types });
                     }
 
                     // 2. Cargar Productos desde Firestore
@@ -306,7 +344,7 @@
 
             async saveCategories() {
                 if(!isFirebaseActive) return;
-                await setDoc(doc(db, "config", "categories"), { list: this.categories });
+                await setDoc(doc(db, "config", "categories"), { rooms: this.rooms, types: this.types });
             },
 
             async addProduct(pData) {
@@ -352,15 +390,22 @@
             },
 
             renderTabs() {
-                const container = document.getElementById('categoryTabs');
-                const list = ['Todos', ...store.categories];
-                container.innerHTML = list.map(c => `
-                    <div class="tab ${store.activeCat === c ? 'active' : ''}" onclick="window.ui.setCat('${c}')">${c}</div>
+                const roomContainer = document.getElementById('roomTabs');
+                const roomList = ['Todas', ...store.rooms];
+                roomContainer.innerHTML = roomList.map(c => `
+                    <div class="tab ${store.activeRoom === c ? 'active' : ''}" onclick="window.ui.setFilter('room', '${c}')">${c}</div>
+                `).join('');
+
+                const typeContainer = document.getElementById('typeTabs');
+                const typeList = ['Todos', ...store.types];
+                typeContainer.innerHTML = typeList.map(c => `
+                    <div class="tab ${store.activeType === c ? 'active' : ''}" onclick="window.ui.setFilter('type', '${c}')">${c}</div>
                 `).join('');
             },
 
-            setCat(c) {
-                store.activeCat = c;
+            setFilter(type, value) {
+                if(type === 'room') store.activeRoom = value;
+                if(type === 'type') store.activeType = value;
                 this.renderTabs();
                 this.renderProducts();
             },
@@ -368,17 +413,31 @@
             renderProducts() {
                 const grid = document.getElementById('productGrid');
                 const query = document.getElementById('searchInput').value.toLowerCase();
+                
                 const filtered = store.products.filter(p => {
-                    const mCat = store.activeCat === 'Todos' || p.cat === store.activeCat;
+                    // Soporte para productos antiguos (que solo tenían p.cat)
+                    const pTypes = p.types || (p.cat ? [p.cat] : []);
+                    const pRooms = p.rooms || [];
+
+                    const mRoom = store.activeRoom === 'Todas' || pRooms.includes(store.activeRoom);
+                    const mType = store.activeType === 'Todos' || pTypes.includes(store.activeType);
                     const mSearch = p.title.toLowerCase().includes(query);
-                    return mCat && mSearch;
+                    
+                    return mRoom && mType && mSearch;
                 });
 
-                grid.innerHTML = filtered.map(p => `
+                grid.innerHTML = filtered.map(p => {
+                    const pTypes = p.types || (p.cat ? [p.cat] : []);
+                    const pRooms = p.rooms || [];
+                    
+                    const roomTags = pRooms.map(r => `<span class="tag-room">${r}</span>`).join('');
+                    const typeTags = pTypes.map(t => `<span class="tag-type">${t}</span>`).join('');
+
+                    return `
                     <div class="card glass">
                         <img src="${p.img}" class="card-img">
                         <div class="card-body">
-                            <div style="font-size:0.7rem; color:var(--primary); font-weight:700;">${p.cat}</div>
+                            <div class="card-tags">${roomTags} ${typeTags}</div>
                             <h3 class="card-title">${p.title}</h3>
                             <p class="card-desc">${p.desc}</p>
                             <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -387,7 +446,8 @@
                             </div>
                         </div>
                     </div>
-                `).join('');
+                    `
+                }).join('');
             },
 
             addToCart(dbId) {
@@ -453,43 +513,69 @@
             },
 
             updateAdminView() {
-                const cList = document.getElementById('adminCategoryList');
-                cList.innerHTML = store.categories.map(c => `
-                    <div class="chip">${c} <span class="material-symbols-rounded" onclick="window.ui.removeCategory('${c}')">close</span></div>
+                const rList = document.getElementById('adminRoomList');
+                rList.innerHTML = store.rooms.map(c => `
+                    <div class="chip">${c} <span class="material-symbols-rounded" onclick="window.ui.removeCategory('room', '${c}')">close</span></div>
                 `).join('');
 
-                const sel = document.getElementById('pCat');
-                sel.innerHTML = store.categories.map(c => `<option value="${c}">${c}</option>`).join('');
+                const tList = document.getElementById('adminTypeList');
+                tList.innerHTML = store.types.map(c => `
+                    <div class="chip">${c} <span class="material-symbols-rounded" onclick="window.ui.removeCategory('type', '${c}')">close</span></div>
+                `).join('');
+
+                const rCheckboxes = document.getElementById('pRoomsCheckboxes');
+                rCheckboxes.innerHTML = store.rooms.map(c => `
+                    <label class="checkbox-label"><input type="checkbox" class="cb-room" value="${c}"> ${c}</label>
+                `).join('');
+
+                const tCheckboxes = document.getElementById('pTypesCheckboxes');
+                tCheckboxes.innerHTML = store.types.map(c => `
+                    <label class="checkbox-label"><input type="checkbox" class="cb-type" value="${c}"> ${c}</label>
+                `).join('');
 
                 const pList = document.getElementById('adminProductList');
-                pList.innerHTML = store.products.map(p => `
-                    <div class="admin-item">
-                        <span>${p.title}</span>
-                        <div style="display:flex; gap:10px;">
-                            <span class="material-symbols-rounded" style="color:var(--primary); cursor:pointer;" onclick="window.ui.editProduct('${p.dbId}')">edit</span>
-                            <span class="material-symbols-rounded" style="color:#ea4335; cursor:pointer;" onclick="window.ui.deleteProduct('${p.dbId}')">delete</span>
+                pList.innerHTML = store.products.map(p => {
+                    const pTypes = p.types || (p.cat ? [p.cat] : []);
+                    const tags = [...(p.rooms || []), ...pTypes].join(', ');
+                    return `
+                    <div class="admin-item" style="flex-direction:column; align-items:flex-start;">
+                        <div style="display:flex; justify-content:space-between; width:100%;">
+                            <span style="font-weight:600;">${p.title}</span>
+                            <div style="display:flex; gap:10px;">
+                                <span class="material-symbols-rounded" style="color:var(--primary); cursor:pointer;" onclick="window.ui.editProduct('${p.dbId}')">edit</span>
+                                <span class="material-symbols-rounded" style="color:#ea4335; cursor:pointer;" onclick="window.ui.deleteProduct('${p.dbId}')">delete</span>
+                            </div>
                         </div>
+                        <div style="font-size:0.75rem; color:#666; margin-top:5px;">${tags || 'Sin categorizar'}</div>
                     </div>
-                `).join('');
+                    `
+                }).join('');
             },
 
-            async addCategory() {
-                const input = document.getElementById('newCatInput');
+            async addCategory(listType) {
+                const isRoom = listType === 'room';
+                const input = document.getElementById(isRoom ? 'newRoomInput' : 'newTypeInput');
                 const val = input.value.trim();
-                if (val && !store.categories.includes(val)) {
-                    document.getElementById('saveBtn').textContent = 'Guardando...';
-                    store.categories.push(val);
+                const targetList = isRoom ? store.rooms : store.types;
+
+                if (val && !targetList.includes(val)) {
+                    targetList.push(val);
                     await store.saveCategories();
                     input.value = '';
                     this.renderAll();
                     this.toast('Categoría añadida a la nube');
-                    document.getElementById('saveBtn').textContent = 'Guardar Producto';
                 }
             },
 
-            async removeCategory(c) {
-                if (!confirm(`¿Eliminar categoría "${c}"?`)) return;
-                store.categories = store.categories.filter(x => x !== c);
+            async removeCategory(listType, c) {
+                if (!confirm(`¿Eliminar categoría "${c}"? Los productos vinculados conservarán la etiqueta pero no podrás filtrar por ella.`)) return;
+                
+                if (listType === 'room') {
+                    store.rooms = store.rooms.filter(x => x !== c);
+                } else {
+                    store.types = store.types.filter(x => x !== c);
+                }
+                
                 await store.saveCategories();
                 this.renderAll();
                 this.toast('Categoría eliminada de la nube');
@@ -499,21 +585,28 @@
                 const dbId = document.getElementById('editId').value;
                 const btn = document.getElementById('saveBtn');
                 
+                // Extraer todos los checkboxes seleccionados
+                const selectedRooms = Array.from(document.querySelectorAll('.cb-room:checked')).map(cb => cb.value);
+                const selectedTypes = Array.from(document.querySelectorAll('.cb-type:checked')).map(cb => cb.value);
+
                 const pData = {
                     title: document.getElementById('pTitle').value,
                     desc: document.getElementById('pDesc').value,
                     price: parseFloat(document.getElementById('pPrice').value || 0),
                     img: document.getElementById('pImg').value || 'https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=200',
-                    cat: document.getElementById('pCat').value,
+                    rooms: selectedRooms,
+                    types: selectedTypes,
                     timestamp: Date.now()
                 };
 
-                if (!pData.title || !pData.cat) return this.toast('Faltan datos');
+                if (!pData.title) return this.toast('Faltan el título del producto');
+                if (selectedRooms.length === 0 && selectedTypes.length === 0) return this.toast('Marca al menos una categoría de algún bloque');
 
                 btn.textContent = 'Guardando en la Nube...';
                 btn.style.opacity = '0.7';
 
                 if (dbId) {
+                    // Si ya tenía el campo viejo "cat", podemos limpiar el documento base, o simplemente actualizar.
                     await store.updateProduct(dbId, pData);
                     this.toast('Actualizado en la nube');
                 } else {
@@ -534,7 +627,14 @@
                 document.getElementById('pDesc').value = p.desc;
                 document.getElementById('pPrice').value = p.price;
                 document.getElementById('pImg').value = p.img;
-                document.getElementById('pCat').value = p.cat;
+                
+                // Manejar productos viejos con p.cat o nuevos con arrays
+                const pTypes = p.types || (p.cat ? [p.cat] : []);
+                const pRooms = p.rooms || [];
+                
+                // Marcar dinámicamente los checkboxes según las arrays del producto
+                document.querySelectorAll('.cb-room').forEach(cb => cb.checked = pRooms.includes(cb.value));
+                document.querySelectorAll('.cb-type').forEach(cb => cb.checked = pTypes.includes(cb.value));
                 
                 document.getElementById('formTitle').textContent = 'Editar Producto';
                 document.getElementById('saveBtn').textContent = 'Actualizar en la Nube';
@@ -554,6 +654,11 @@
                 document.getElementById('pDesc').value = '';
                 document.getElementById('pPrice').value = '';
                 document.getElementById('pImg').value = '';
+                
+                // Limpiar todos los checkboxes
+                document.querySelectorAll('.cb-room').forEach(cb => cb.checked = false);
+                document.querySelectorAll('.cb-type').forEach(cb => cb.checked = false);
+
                 document.getElementById('formTitle').textContent = 'Nuevo Producto';
                 document.getElementById('saveBtn').textContent = 'Guardar Producto';
                 document.getElementById('cancelBtn').style.display = 'none';
