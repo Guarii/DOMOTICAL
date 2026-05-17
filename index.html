@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domotical</title>
+    <title>DomóticaHub - Sincronizado en la Nube</title>
     
     <!-- Google Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -21,7 +21,6 @@
             --radius-xl: 24px;
             --radius-lg: 16px;
             --radius-pill: 50px;
-            --ai-glow: linear-gradient(135deg, #1a73e8, #a855f7);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,7 +39,7 @@
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             background: radial-gradient(circle at 0% 0%, #d3e3fd 0%, transparent 40%),
-                        radial-gradient(circle at 100% 100%, #f5d0fe 0%, transparent 40%);
+                        radial-gradient(circle at 100% 100%, #fce8e6 0%, transparent 40%);
         }
 
         .glass {
@@ -51,70 +50,27 @@
             box-shadow: var(--shadow);
         }
 
-        /* Header */
         header {
-            position: sticky;
-            top: 0; z-index: 100;
-            padding: 16px 5%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
+            position: sticky; top: 0; z-index: 100;
+            padding: 16px 5%; display: flex; align-items: center;
+            justify-content: space-between; gap: 20px;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-decoration: none;
-            color: var(--on-surface);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .search-container {
-            flex: 1;
-            max-width: 500px;
-            position: relative;
-        }
-        .search-container input {
-            width: 100%;
-            padding: 12px 20px 12px 45px;
-            border-radius: var(--radius-pill);
-            border: 1px solid var(--border);
-            background: rgba(255,255,255,0.6);
-            font-family: inherit;
-            outline: none;
-            transition: 0.3s;
-        }
+        .logo { font-size: 1.5rem; font-weight: 700; text-decoration: none; color: var(--on-surface); display: flex; align-items: center; gap: 8px; }
+        .search-container { flex: 1; max-width: 500px; position: relative; }
+        .search-container input { width: 100%; padding: 12px 20px 12px 45px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: rgba(255,255,255,0.6); font-family: inherit; outline: none; transition: 0.3s; }
         .search-container input:focus { border-color: var(--primary); background: white; }
         .search-container .material-symbols-rounded { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #555; }
-
         .actions { display: flex; gap: 8px; }
-
-        .btn-icon {
-            width: 45px; height: 45px; border-radius: 50%; border: none;
-            background: transparent; cursor: pointer; display: flex;
-            align-items: center; justify-content: center; position: relative;
-        }
+        .btn-icon { width: 45px; height: 45px; border-radius: 50%; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; }
         .btn-icon:hover { background: rgba(0,0,0,0.05); }
-        .badge {
-            position: absolute; top: 5px; right: 5px; background: var(--primary);
-            color: white; font-size: 0.7rem; width: 18px; height: 18px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        }
+        .badge { position: absolute; top: 5px; right: 5px; background: var(--primary); color: white; font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* Tabs */
         .tabs { padding: 15px 5%; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
         .tabs::-webkit-scrollbar { display: none; }
-        .tab {
-            padding: 8px 20px; border-radius: var(--radius-pill);
-            background: rgba(255,255,255,0.5); border: 1px solid var(--border);
-            cursor: pointer; white-space: nowrap; transition: 0.3s; font-weight: 500;
-        }
+        .tab { padding: 8px 20px; border-radius: var(--radius-pill); background: rgba(255,255,255,0.5); border: 1px solid var(--border); cursor: pointer; white-space: nowrap; transition: 0.3s; font-weight: 500; }
         .tab.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* Products */
         main { padding: 0 5% 50px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
         .card { border-radius: var(--radius-xl); overflow: hidden; display: flex; flex-direction: column; transition: 0.3s; }
         .card:hover { transform: translateY(-5px); }
@@ -123,28 +79,18 @@
         .card-title { font-weight: 600; font-size: 1.1rem; margin: 5px 0; }
         .card-desc { font-size: 0.85rem; color: #666; margin-bottom: 15px; flex: 1; }
         .price { font-weight: 700; font-size: 1.2rem; }
-        .btn-add {
-            background: var(--primary); color: white; border: none;
-            padding: 8px 16px; border-radius: var(--radius-pill); cursor: pointer;
-        }
+        .btn-add { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-pill); cursor: pointer; }
 
-        /* Modals */
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.2); backdrop-filter: blur(10px);
-            display: none; justify-content: center; align-items: center; z-index: 1000;
-        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px;}
         .overlay.active { display: flex; }
         .modal { width: 100%; max-width: 550px; max-height: 85vh; border-radius: var(--radius-xl); padding: 30px; overflow-y: auto; position: relative; }
         .close { position: absolute; top: 20px; right: 20px; cursor: pointer; }
 
-        /* Cart Items */
         .cart-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #eee; }
         .cart-item img { width: 50px; height: 50px; border-radius: 8px; }
         .qty-ctrl { display: flex; align-items: center; gap: 10px; background: #eee; padding: 5px 12px; border-radius: 20px; }
 
-        /* Form & Admin List */
-        .form-group { margin-bottom: 12px; position: relative; }
+        .form-group { margin-bottom: 12px; }
         label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; }
         input, select, textarea { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: inherit; }
         .btn-full { width: 100%; padding: 12px; border-radius: 50px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer; margin-top: 10px; }
@@ -156,265 +102,82 @@
 
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #333; color: white; padding: 10px 20px; border-radius: 50px; transition: 0.4s; z-index: 2000; }
         #toast.active { transform: translateX(-50%) translateY(0); }
-
-        /* Estilos del Widget de Chat de IA */
-        #ai-chat-btn {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background: var(--ai-glow);
-            color: white;
-            padding: 12px 24px;
-            border-radius: var(--radius-pill);
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: inherit;
-            font-weight: 600;
-            z-index: 999;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        #ai-chat-btn:hover {
-            transform: scale(1.05) translateY(-3px);
-            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.6);
-        }
-        #ai-chat-btn .sparkle {
-            animation: spin 3s linear infinite;
-        }
-
-        #ai-chat-window {
-            position: fixed;
-            bottom: 90px;
-            right: 25px;
-            width: 380px;
-            height: 520px;
-            border-radius: var(--radius-xl);
-            display: none;
-            flex-direction: column;
-            z-index: 999;
-            overflow: hidden;
-            transition: 0.3s;
-        }
-        #ai-chat-window.active {
-            display: flex;
-        }
-        @media (max-width: 480px) {
-            #ai-chat-window {
-                width: calc(100% - 32px);
-                right: 16px;
-                bottom: 85px;
-                height: calc(100vh - 120px);
-            }
-        }
-
-        .chat-header {
-            background: var(--ai-glow);
-            color: white;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .chat-header h4 { font-weight: 600; font-size: 1.1rem; }
-        .chat-header p { font-size: 0.75rem; opacity: 0.8; }
-
-        .chat-body {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.4);
-        }
-
-        .chat-msg {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: 16px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            word-wrap: break-word;
-        }
-        .chat-msg.bot {
-            background: white;
-            color: var(--on-surface);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            border: 1px solid rgba(0,0,0,0.05);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-        .chat-msg.user {
-            background: var(--primary);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
         
-        .chat-suggestions {
-            display: flex;
-            gap: 6px;
-            padding: 8px 12px;
-            overflow-x: auto;
-            background: rgba(255,255,255,0.2);
-            border-top: 1px solid var(--border);
-            scrollbar-width: none;
+        #loadingOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--surface); z-index: 9999; display: flex;
+            flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s;
         }
-        .chat-suggestions::-webkit-scrollbar { display: none; }
-        .chat-suggestions button {
-            background: white;
-            border: 1px solid #ddd;
-            padding: 6px 12px;
-            border-radius: var(--radius-pill);
-            font-size: 0.75rem;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: 0.2s;
+        .spinner {
+            width: 50px; height: 50px; border: 5px solid var(--primary-container);
+            border-top-color: var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
         }
-        .chat-suggestions button:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .chat-footer {
-            padding: 10px 15px;
-            background: white;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .chat-footer input {
-            flex: 1;
-            border: 1px solid #e2e8f0;
-            padding: 10px 14px;
-            border-radius: var(--radius-pill);
-            outline: none;
-            font-size: 0.9rem;
-        }
-        .chat-footer input:focus { border-color: var(--primary); }
-        .chat-send-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .chat-send-btn:hover { background: #1557b0; }
-
-        /* Copiloto de IA en Formulario Admin */
-        .ai-assist-inline {
-            position: absolute;
-            right: 8px;
-            top: 28px;
-            background: var(--ai-glow);
-            color: white;
-            border: none;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            box-shadow: 0 2px 8px rgba(168, 85, 247, 0.2);
-            transition: 0.2s;
-            z-index: 10;
-        }
-        .ai-assist-inline:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
-        }
-
-        .loader-dots {
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-            padding: 6px 0;
-        }
-        .loader-dots div {
-            width: 6px; height: 6px;
-            background: #94a3b8;
-            border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
-        .loader-dots div:nth-child(1) { animation-delay: -0.32s; }
-        .loader-dots div:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <h3 style="color: var(--primary)">Conectando con la nube...</h3>
+        <p style="font-size: 0.8rem; color: #666; margin-top: 5px;" id="loadingMsg">Cargando base de datos</p>
+    </div>
 
     <div class="ambient-bg"></div>
 
     <header class="glass">
         <a href="#" class="logo" onclick="location.reload()">
-            <span class="material-symbols-rounded">nest_eco_leaf</span> Domotical
+            <span class="material-symbols-rounded">nest_eco_leaf</span> DomóticaHub
         </a>
         <div class="search-container">
             <span class="material-symbols-rounded">search</span>
-            <input type="text" id="searchInput" placeholder="Buscar dispositivos..." oninput="ui.renderProducts()">
+            <input type="text" id="searchInput" placeholder="Buscar dispositivos..." oninput="window.ui.renderProducts()">
         </div>
         <div class="actions">
-            <button class="btn-icon" onclick="ui.toggleModal('cartModal', true)">
+            <button class="btn-icon" onclick="window.ui.toggleModal('cartModal', true)">
                 <span class="material-symbols-rounded">shopping_bag</span>
                 <span class="badge" id="cartBadge">0</span>
             </button>
-            <button class="btn-icon" onclick="ui.toggleModal('adminLoginModal', true)">
+            <button class="btn-icon" onclick="window.ui.toggleModal('adminLoginModal', true)">
                 <span class="material-symbols-rounded">settings</span>
             </button>
         </div>
     </header>
 
     <nav class="tabs" id="categoryTabs"></nav>
-
     <main id="productGrid"></main>
 
     <!-- Modal Carrito -->
     <div class="overlay" id="cartModal">
         <div class="modal glass">
-            <span class="material-symbols-rounded close" onclick="ui.toggleModal('cartModal', false)">close</span>
+            <span class="material-symbols-rounded close" onclick="window.ui.toggleModal('cartModal', false)">close</span>
             <h2>Mi Cesta</h2>
             <div id="cartContent" style="margin: 20px 0;"></div>
             <div id="cartFooter"></div>
-            <button class="btn-full" onclick="ui.checkout()">Finalizar Compra</button>
+            <button class="btn-full" onclick="window.ui.checkout()">Finalizar Compra</button>
         </div>
     </div>
 
     <!-- Modal Login -->
     <div class="overlay" id="adminLoginModal">
         <div class="modal glass" style="max-width: 350px;">
-            <span class="material-symbols-rounded close" onclick="ui.toggleModal('adminLoginModal', false)">close</span>
+            <span class="material-symbols-rounded close" onclick="window.ui.toggleModal('adminLoginModal', false)">close</span>
             <h2 style="text-align:center; margin-bottom: 20px;">Administración</h2>
             <input type="password" id="adminPass" placeholder="Contraseña (admin)">
-            <button class="btn-full" onclick="ui.login()">Acceder</button>
+            <button class="btn-full" onclick="window.ui.login()">Acceder</button>
         </div>
     </div>
 
-    <!-- Modal Admin Dashboard -->
     <div class="overlay" id="adminDashboard">
         <div class="modal glass">
-            <span class="material-symbols-rounded close" onclick="ui.toggleModal('adminDashboard', false)">close</span>
+            <span class="material-symbols-rounded close" onclick="window.ui.toggleModal('adminDashboard', false)">close</span>
             
             <h3>Gestionar Categorías</h3>
             <div style="display:flex; gap:8px; margin-top:10px;">
                 <input type="text" id="newCatInput" placeholder="Nombre de categoría...">
-                <button class="btn-full" style="width:auto; margin:0; padding:0 20px;" onclick="ui.addCategory()">Añadir</button>
+                <button class="btn-full" style="width:auto; margin:0; padding:0 20px;" onclick="window.ui.addCategory()">Añadir</button>
             </div>
             <div id="adminCategoryList" class="chip-list"></div>
 
@@ -425,15 +188,11 @@
                 <input type="hidden" id="editId">
                 <div class="form-group">
                     <label>Título</label>
-                    <input type="text" id="pTitle" placeholder="Ej: Interruptor Inteligente WiFi">
+                    <input type="text" id="pTitle">
                 </div>
                 <div class="form-group">
                     <label>Descripción</label>
-                    <!-- Botón de Copiloto de IA para redactar descripciones instantáneas -->
-                    <button class="ai-assist-inline" onclick="ai.autoGenerateDescription()">
-                        <span class="material-symbols-rounded sparkle" style="font-size:14px;">auto_awesome</span> Redactar con IA
-                    </button>
-                    <textarea id="pDesc" rows="3" placeholder="Redacta la descripción o usa el botón inteligente..."></textarea>
+                    <textarea id="pDesc" rows="2"></textarea>
                 </div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                     <div class="form-group"><label>Precio (€)</label><input type="number" id="pPrice" step="0.01"></div>
@@ -443,8 +202,8 @@
                     <label>Categoría</label>
                     <select id="pCat"></select>
                 </div>
-                <button class="btn-full" id="saveBtn" onclick="ui.saveProduct()">Guardar Producto</button>
-                <button class="btn-full" id="cancelBtn" style="display:none; background:#888;" onclick="ui.resetForm()">Cancelar</button>
+                <button class="btn-full" id="saveBtn" onclick="window.ui.saveProduct()">Guardar Producto</button>
+                <button class="btn-full" id="cancelBtn" style="display:none; background:#888;" onclick="window.ui.resetForm()">Cancelar</button>
             </div>
 
             <hr style="opacity:0.1; margin:20px 0;">
@@ -453,82 +212,136 @@
         </div>
     </div>
 
-    <!-- Burbuja Flotante y Ventana de Asistente de IA (DomoBot) -->
-    <button id="ai-chat-btn" onclick="ui.toggleChat()">
-        <span class="material-symbols-rounded sparkle">auto_awesome</span>
-        <span>Asistente AI</span>
-    </button>
-
-    <div id="ai-chat-window" class="glass">
-        <div class="chat-header">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <span class="material-symbols-rounded" style="color:white;">neurology</span>
-                <div>
-                    <h4>DomoBot</h4>
-                    <p>Experto en Hogar Digital</p>
-                </div>
-            </div>
-            <button class="btn-icon" style="color:white;" onclick="ui.toggleChat(false)">
-                <span class="material-symbols-rounded">close</span>
-            </button>
-        </div>
-        <div class="chat-body" id="chatBody">
-            <div class="chat-msg bot">
-                ¡Hola! Soy <strong>DomoBot</strong>, tu consultor de domótica personalizado. 💡
-                <br><br>
-                Puedo ayudarte a elegir productos del catálogo, diseñar soluciones de ahorro, configurar tu casa o responder dudas técnicas. ¿Por dónde empezamos?
-            </div>
-        </div>
-        <div class="chat-suggestions">
-            <button onclick="ai.sendPredefined('¿Qué productos de iluminación tenéis disponibles?')">💡 Ver Iluminación</button>
-            <button onclick="ai.sendPredefined('Recomiéndame un plan de seguridad completo')">🛡️ Plan Seguridad</button>
-            <button onclick="ai.sendPredefined('¿Cómo puedo programar una bombilla inteligente?')">🔧 ¿Cómo se instala?</button>
-            <button onclick="ai.sendPredefined('¿Qué productos de Climatización hay?')">🌡️ Control de Clima</button>
-        </div>
-        <div class="chat-footer">
-            <input type="text" id="chatInput" placeholder="Pregunta a DomoBot..." onkeydown="if(event.key === 'Enter') ai.sendUserMessage()">
-            <button class="chat-send-btn" onclick="ai.sendUserMessage()">
-                <span class="material-symbols-rounded">send</span>
-            </button>
-        </div>
-    </div>
-
     <div id="toast"></div>
 
-    <script>
+    <script type="module">
+        // Importamos Firebase SDK desde CDN
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, doc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // ==============================================================================
+        // ⚠️ ATENCIÓN: PEGA AQUÍ LA CONFIGURACIÓN DE TU PROYECTO DE FIREBASE ⚠️
+        // ==============================================================================
+        const firebaseConfig = {
+           apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
+           authDomain: "domotical-680de.firebaseapp.com",
+           projectId: "domotical-680de",
+           storageBucket: "domotical-680de.firebasestorage.app",
+           messagingSenderId: "923219132599",
+           appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
+           measurementId: "G-0J6JGDD1BK"
+        };
+        // ==============================================================================
+
+        let db;
+        let isFirebaseActive = true;
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            if(firebaseConfig.apiKey === "TU_API_KEY"){
+                isFirebaseActive = false;
+            }
+        } catch(e) {
+            console.error("Error iniciando Firebase", e);
+            isFirebaseActive = false;
+        }
+
         const store = {
             products: [],
-            categories: [],
-            cart: [],
+            categories: ['Seguridad', 'Iluminación', 'Climatización'], // Por defecto
+            cart: [], // El carrito SIEMPRE se queda en LocalStorage
             activeCat: 'Todos',
 
-            init() {
-                const p = localStorage.getItem('dh_prods');
-                const c = localStorage.getItem('dh_cats');
-                
-                this.categories = c ? JSON.parse(c) : ['Seguridad', 'Iluminación', 'Climatización'];
-                if (p) {
-                    this.products = JSON.parse(p);
-                } else {
-                    this.products = [
-                        { id: 1, title: 'Cámara Pro 360', desc: 'Detección inteligente y audio bidireccional de gran alcance con resolución UltraHD.', price: 95.00, img: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400', cat: 'Seguridad' },
-                        { id: 2, title: 'Bombilla Inteligente', desc: '16 millones de colores y control total por voz compatible con asistentes virtuales.', price: 19.90, img: 'https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400', cat: 'Iluminación' },
-                        { id: 3, title: 'Termostato Wi-Fi Inteligente', desc: 'Ajuste dinámico automático para optimización de consumo y calefacción inteligente.', price: 129.00, img: 'https://images.unsplash.com/photo-1545259741-2ea3ebf61fa3?w=400', cat: 'Climatización' }
-                    ];
+            async init() {
+                // Cargar carrito del usuario (memoria local)
+                const savedCart = localStorage.getItem('dh_cart_cloud');
+                if (savedCart) this.cart = JSON.parse(savedCart);
+
+                if (!isFirebaseActive) {
+                    document.getElementById('loadingMsg').textContent = "⚠️ Faltan las claves de Firebase. Usando datos de prueba locales.";
+                    this.loadMockData();
+                    setTimeout(() => document.getElementById('loadingOverlay').style.display = 'none', 2000);
+                    return;
                 }
-                this.save();
+
+                try {
+                    // 1. Cargar Categorías desde Firestore
+                    const catDoc = await getDoc(doc(db, "config", "categories"));
+                    if (catDoc.exists() && catDoc.data().list) {
+                        this.categories = catDoc.data().list;
+                    } else {
+                        // Crear documento de categorías por defecto si no existe
+                        await setDoc(doc(db, "config", "categories"), { list: this.categories });
+                    }
+
+                    // 2. Cargar Productos desde Firestore
+                    const querySnapshot = await getDocs(collection(db, "products"));
+                    this.products = [];
+                    querySnapshot.forEach((doc) => {
+                        this.products.push({ dbId: doc.id, ...doc.data() });
+                    });
+
+                } catch (error) {
+                    console.error("Error leyendo Firestore:", error);
+                    alert("Error de conexión a la base de datos. Comprueba los permisos de Firestore.");
+                    this.loadMockData();
+                }
+
+                document.getElementById('loadingOverlay').style.opacity = '0';
+                setTimeout(() => document.getElementById('loadingOverlay').style.display = 'none', 500);
             },
 
-            save() {
-                localStorage.setItem('dh_prods', JSON.stringify(this.products));
-                localStorage.setItem('dh_cats', JSON.stringify(this.categories));
+            loadMockData() {
+                this.products = [
+                    { dbId: 'mock1', id: 1, title: 'Cámara Nube Pro', desc: 'Datos de prueba sin conexión.', price: 95.00, img: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400', cat: 'Seguridad' },
+                    { dbId: 'mock2', id: 2, title: 'Enchufe Nube', desc: 'Datos de prueba sin conexión.', price: 19.90, img: 'https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=400', cat: 'Energía' }
+                ];
+                if(!this.categories.includes('Energía')) this.categories.push('Energía');
+            },
+
+            saveCart() {
+                localStorage.setItem('dh_cart_cloud', JSON.stringify(this.cart));
+            },
+
+            async saveCategories() {
+                if(!isFirebaseActive) return;
+                await setDoc(doc(db, "config", "categories"), { list: this.categories });
+            },
+
+            async addProduct(pData) {
+                if(!isFirebaseActive) { this.products.unshift({dbId: 'temp', ...pData}); return; }
+                const docRef = await addDoc(collection(db, "products"), pData);
+                this.products.unshift({ dbId: docRef.id, ...pData });
+            },
+
+            async updateProduct(dbId, pData) {
+                if(!isFirebaseActive) {
+                    const idx = this.products.findIndex(x => x.dbId === dbId);
+                    this.products[idx] = {dbId, ...pData};
+                    return;
+                }
+                const pRef = doc(db, "products", dbId);
+                await updateDoc(pRef, pData);
+                const idx = this.products.findIndex(x => x.dbId === dbId);
+                this.products[idx] = { dbId, ...pData };
+            },
+
+            async deleteProductFromDb(dbId) {
+                if(!isFirebaseActive) {
+                    this.products = this.products.filter(x => x.dbId !== dbId);
+                    return;
+                }
+                await deleteDoc(doc(db, "products", dbId));
+                this.products = this.products.filter(x => x.dbId !== dbId);
             }
         };
 
         const ui = {
-            init() {
-                store.init();
+            async init() {
+                await store.init();
                 this.renderAll();
+                if(!isFirebaseActive) this.toast("Modo Offline: Configura Firebase en el código");
             },
 
             renderAll() {
@@ -542,7 +355,7 @@
                 const container = document.getElementById('categoryTabs');
                 const list = ['Todos', ...store.categories];
                 container.innerHTML = list.map(c => `
-                    <div class="tab ${store.activeCat === c ? 'active' : ''}" onclick="ui.setCat('${c}')">${c}</div>
+                    <div class="tab ${store.activeCat === c ? 'active' : ''}" onclick="window.ui.setCat('${c}')">${c}</div>
                 `).join('');
             },
 
@@ -570,18 +383,19 @@
                             <p class="card-desc">${p.desc}</p>
                             <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <span class="price">${p.price.toFixed(2)}€</span>
-                                <button class="btn-add" onclick="ui.addToCart(${p.id})">Añadir</button>
+                                <button class="btn-add" onclick="window.ui.addToCart('${p.dbId}')">Añadir</button>
                             </div>
                         </div>
                     </div>
                 `).join('');
             },
 
-            addToCart(id) {
-                const p = store.products.find(x => x.id === id);
-                const item = store.cart.find(x => x.id === id);
+            addToCart(dbId) {
+                const p = store.products.find(x => x.dbId === dbId);
+                const item = store.cart.find(x => x.dbId === dbId);
                 if (item) item.qty++;
                 else store.cart.push({ ...p, qty: 1 });
+                store.saveCart();
                 this.updateCart();
                 this.toast('Añadido a la cesta');
             },
@@ -601,9 +415,9 @@
                                 <div style="font-size:0.8rem; color:#666;">${i.price.toFixed(2)}€</div>
                             </div>
                             <div class="qty-ctrl">
-                                <button onclick="ui.changeQty(${i.id}, -1)" style="border:0;background:0;cursor:pointer;">-</button>
+                                <button onclick="window.ui.changeQty('${i.dbId}', -1)" style="border:0;background:0;cursor:pointer;">-</button>
                                 <span>${i.qty}</span>
-                                <button onclick="ui.changeQty(${i.id}, 1)" style="border:0;background:0;cursor:pointer;">+</button>
+                                <button onclick="window.ui.changeQty('${i.dbId}', 1)" style="border:0;background:0;cursor:pointer;">+</button>
                             </div>
                         </div>
                     `).join('');
@@ -612,10 +426,11 @@
                 }
             },
 
-            changeQty(id, d) {
-                const i = store.cart.find(x => x.id === id);
+            changeQty(dbId, d) {
+                const i = store.cart.find(x => x.dbId === dbId);
                 i.qty += d;
-                if (i.qty <= 0) store.cart = store.cart.filter(x => x.id !== id);
+                if (i.qty <= 0) store.cart = store.cart.filter(x => x.dbId !== dbId);
+                store.saveCart();
                 this.updateCart();
             },
 
@@ -623,92 +438,98 @@
                 if (store.cart.length === 0) return;
                 this.toast('¡Pedido procesado!');
                 store.cart = [];
+                store.saveCart();
                 this.updateCart();
                 this.toggleModal('cartModal', false);
             },
 
-            // Admin Actions
             login() {
                 const p = document.getElementById('adminPass').value;
                 if (p === 'admin' || p === '') {
                     this.toggleModal('adminLoginModal', false);
                     this.toggleModal('adminDashboard', true);
                     this.updateAdminView();
-                } else this.toast('Error de contraseña');
+                } else this.toast('Clave incorrecta');
             },
 
             updateAdminView() {
-                // Categorías
                 const cList = document.getElementById('adminCategoryList');
                 cList.innerHTML = store.categories.map(c => `
-                    <div class="chip">${c} <span class="material-symbols-rounded" onclick="ui.removeCategory('${c}')">close</span></div>
+                    <div class="chip">${c} <span class="material-symbols-rounded" onclick="window.ui.removeCategory('${c}')">close</span></div>
                 `).join('');
 
-                // Select
                 const sel = document.getElementById('pCat');
                 sel.innerHTML = store.categories.map(c => `<option value="${c}">${c}</option>`).join('');
 
-                // Productos
                 const pList = document.getElementById('adminProductList');
                 pList.innerHTML = store.products.map(p => `
                     <div class="admin-item">
                         <span>${p.title}</span>
                         <div style="display:flex; gap:10px;">
-                            <span class="material-symbols-rounded" style="color:var(--primary); cursor:pointer;" onclick="ui.editProduct(${p.id})">edit</span>
-                            <span class="material-symbols-rounded" style="color:#ea4335; cursor:pointer;" onclick="ui.deleteProduct(${p.id})">delete</span>
+                            <span class="material-symbols-rounded" style="color:var(--primary); cursor:pointer;" onclick="window.ui.editProduct('${p.dbId}')">edit</span>
+                            <span class="material-symbols-rounded" style="color:#ea4335; cursor:pointer;" onclick="window.ui.deleteProduct('${p.dbId}')">delete</span>
                         </div>
                     </div>
                 `).join('');
             },
 
-            addCategory() {
+            async addCategory() {
                 const input = document.getElementById('newCatInput');
                 const val = input.value.trim();
                 if (val && !store.categories.includes(val)) {
+                    document.getElementById('saveBtn').textContent = 'Guardando...';
                     store.categories.push(val);
-                    store.save();
+                    await store.saveCategories();
                     input.value = '';
                     this.renderAll();
-                    this.toast('Categoría añadida');
+                    this.toast('Categoría añadida a la nube');
+                    document.getElementById('saveBtn').textContent = 'Guardar Producto';
                 }
             },
 
-            removeCategory(c) {
+            async removeCategory(c) {
                 if (!confirm(`¿Eliminar categoría "${c}"?`)) return;
                 store.categories = store.categories.filter(x => x !== c);
-                store.save();
+                await store.saveCategories();
                 this.renderAll();
+                this.toast('Categoría eliminada de la nube');
             },
 
-            saveProduct() {
-                const id = document.getElementById('editId').value;
-                const p = {
-                    id: id ? parseInt(id) : Date.now(),
+            async saveProduct() {
+                const dbId = document.getElementById('editId').value;
+                const btn = document.getElementById('saveBtn');
+                
+                const pData = {
                     title: document.getElementById('pTitle').value,
                     desc: document.getElementById('pDesc').value,
                     price: parseFloat(document.getElementById('pPrice').value || 0),
                     img: document.getElementById('pImg').value || 'https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=200',
-                    cat: document.getElementById('pCat').value
+                    cat: document.getElementById('pCat').value,
+                    timestamp: Date.now()
                 };
 
-                if (!p.title || !p.cat) return this.toast('Faltan datos');
+                if (!pData.title || !pData.cat) return this.toast('Faltan datos');
 
-                if (id) {
-                    const idx = store.products.findIndex(x => x.id == id);
-                    store.products[idx] = p;
+                btn.textContent = 'Guardando en la Nube...';
+                btn.style.opacity = '0.7';
+
+                if (dbId) {
+                    await store.updateProduct(dbId, pData);
+                    this.toast('Actualizado en la nube');
                 } else {
-                    store.products.unshift(p);
+                    await store.addProduct(pData);
+                    this.toast('Creado en la nube');
                 }
 
-                store.save();
                 this.resetForm();
                 this.renderAll();
-                this.toast(id ? 'Actualizado' : 'Creado');
+                btn.textContent = 'Guardar Producto';
+                btn.style.opacity = '1';
             },
 
-            editProduct(id) {
-                const p = store.products.find(x => x.id === id);
-                document.getElementById('editId').value = p.id;
+            editProduct(dbId) {
+                const p = store.products.find(x => x.dbId === dbId);
+                document.getElementById('editId').value = p.dbId;
                 document.getElementById('pTitle').value = p.title;
                 document.getElementById('pDesc').value = p.desc;
                 document.getElementById('pPrice').value = p.price;
@@ -716,15 +537,15 @@
                 document.getElementById('pCat').value = p.cat;
                 
                 document.getElementById('formTitle').textContent = 'Editar Producto';
-                document.getElementById('saveBtn').textContent = 'Guardar Cambios';
+                document.getElementById('saveBtn').textContent = 'Actualizar en la Nube';
                 document.getElementById('cancelBtn').style.display = 'block';
             },
 
-            deleteProduct(id) {
-                if (!confirm('¿Borrar este producto?')) return;
-                store.products = store.products.filter(x => x.id !== id);
-                store.save();
+            async deleteProduct(dbId) {
+                if (!confirm('¿Borrar este producto para todos los usuarios?')) return;
+                await store.deleteProductFromDb(dbId);
                 this.renderAll();
+                this.toast('Borrado de la nube');
             },
 
             resetForm() {
@@ -742,210 +563,17 @@
                 document.getElementById(id).style.display = show ? 'flex' : 'none';
             },
 
-            toggleChat(show = null) {
-                const chatWin = document.getElementById('ai-chat-window');
-                if (show === null) {
-                    chatWin.classList.toggle('active');
-                } else if (show) {
-                    chatWin.classList.add('active');
-                } else {
-                    chatWin.classList.remove('active');
-                }
-                
-                // Hacer scroll al fondo cuando se abre el chat
-                if (chatWin.classList.contains('active')) {
-                    const chatBody = document.getElementById('chatBody');
-                    chatBody.scrollTop = chatBody.scrollHeight;
-                }
-            },
-
             toast(m) {
                 const t = document.getElementById('toast');
                 t.textContent = m;
                 t.classList.add('active');
-                setTimeout(() => t.classList.remove('active'), 2500);
+                setTimeout(() => t.classList.remove('active'), 3500);
             }
         };
 
-        const ai = {
-            apiKey: "", // El Canvas inyectará el API Key automáticamente durante la ejecución
-            chatHistory: [],
-
-            // Función genérica para enviar llamadas de texto a Gemini (gemini-3-flash-preview)
-            async callGemini(systemPrompt, userQuery) {
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${this.apiKey}`;
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: {
-                        parts: [{ text: systemPrompt }]
-                    }
-                };
-
-                let delay = 1000;
-                for (let attempt = 1; attempt <= 3; attempt++) {
-                    try {
-                        const response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-
-                        if (!response.ok) {
-                            if (response.status === 429) { // Throttling
-                                await new Promise(res => setTimeout(res, delay));
-                                delay *= 2;
-                                continue;
-                            }
-                            throw new Error(`HTTP Error: ${response.status}`);
-                        }
-
-                        const result = await response.json();
-                        const candidate = result.candidates?.[0];
-                        if (candidate && candidate.content?.parts?.[0]?.text) {
-                            return candidate.content.parts[0].text;
-                        }
-                        throw new Error("No text response from Gemini API");
-                    } catch (error) {
-                        if (attempt === 3) throw error;
-                        await new Promise(res => setTimeout(res, delay));
-                        delay *= 2;
-                    }
-                }
-            },
-
-            async autoGenerateDescription() {
-                const titleInput = document.getElementById('pTitle');
-                const descTextarea = document.getElementById('pDesc');
-                const title = titleInput.value.trim();
-
-                if (!title) {
-                    ui.toast("Escribe primero el título del producto");
-                    return;
-                }
-
-                // Mostrar estado de carga e inhabilitar botón temporalmente
-                ui.toast("Generando descripción con IA...");
-                descTextarea.placeholder = "DomoBot está redactando la descripción comercial...";
-                descTextarea.value = "";
-
-                const systemPrompt = "Eres un redactor creativo de marketing especializado en domótica, IoT y hogar conectado. Escribe una descripción comercial y sumamente atractiva, fluida y técnica de un máximo de dos frases (máximo 40 palabras) en español. Resalta el beneficio clave y la facilidad de instalación.";
-                const userQuery = `Redacta una descripción ideal para el producto de domótica: "${title}"`;
-
-                try {
-                    const description = await this.callGemini(systemPrompt, userQuery);
-                    descTextarea.value = description.trim().replace(/^"|"$/g, ''); // Limpiar comillas innecesarias
-                } catch (error) {
-                    console.error("AI Generation failed:", error);
-                    ui.toast("Error al conectar con la IA de Gemini");
-                    descTextarea.placeholder = "No se pudo autogenerar. Escribe manualmente.";
-                }
-            },
-
-            async sendUserMessage() {
-                const chatInput = document.getElementById('chatInput');
-                const query = chatInput.value.trim();
-                if (!query) return;
-
-                // Añadir mensaje del usuario en la UI
-                this.addMessageToUi(query, 'user');
-                chatInput.value = "";
-
-                // Añadir indicador de que la IA está escribiendo
-                const loaderId = this.addLoaderToUi();
-
-                try {
-                    // Generamos el listado dinámico de los productos actuales de la tienda
-                    const catalogJson = store.products.map(p => ({
-                        id: p.id,
-                        titulo: p.title,
-                        descripcion: p.desc,
-                        precio_euros: p.price,
-                        categoria: p.cat
-                    }));
-
-                    const systemPrompt = `Eres DomoBot, el amigable, profesional y superexperto chatbot de asistencia técnica y atención comercial de "Domotical", una tienda en línea de hogar digital de primer nivel.
-                    
-                    Tu misión es guiar al cliente en su compra, aclararle dudas sobre compatibilidades de smart home (como Alexa, Google Home, protocolos WiFi/Zigbee) y asesorarle con profesionalidad.
-                    
-                    IMPORTANTE: Tienes acceso al catálogo actual y real de productos en tiempo real a continuación. Si recomiendas un producto o respondes una consulta, prefiere SIEMPRE los productos de este catálogo indicando su precio exacto para promover las ventas de nuestra tienda:
-                    ${JSON.stringify(catalogJson)}
-                    
-                    Normas obligatorias de DomoBot:
-                    1. Si te piden un producto que no está en el catálogo, puedes responder de forma general y luego sugerir la alternativa más parecida que SÍ tengamos en stock.
-                    2. Responde siempre de forma concisa, cálida y en español. Usa emojis apropiados.
-                    3. No inventes precios diferentes de los del catálogo.
-                    4. Para configurar packs, puedes proponer comprar varios dispositivos de nuestra lista.
-                    5. Si te preguntan por productos específicos del catálogo, menciónalos de manera atractiva.`;
-
-                    // Mantenemos una memoria de historial de conversación simple
-                    this.chatHistory.push(`Cliente: ${query}`);
-                    if (this.chatHistory.length > 8) this.chatHistory.shift(); // limitar a las últimas intervenciones
-
-                    const userContext = `Historial reciente:\n${this.chatHistory.join('\n')}\n\nNueva consulta del Cliente: "${query}"`;
-
-                    const response = await this.callGemini(systemPrompt, userContext);
-                    
-                    // Remover cargador y pintar respuesta de la IA
-                    this.removeLoader(loaderId);
-                    this.addMessageToUi(response, 'bot');
-                    this.chatHistory.push(`DomoBot: ${response}`);
-
-                } catch (error) {
-                    console.error("DomoBot chat failed:", error);
-                    this.removeLoader(loaderId);
-                    this.addMessageToUi("¡Vaya! He tenido un pequeño corte de conexión con mis servidores neuronales. ¿Me podrías repetir la pregunta?", 'bot');
-                }
-            },
-
-            // Enviar sugerencias predeterminadas
-            sendPredefined(text) {
-                document.getElementById('chatInput').value = text;
-                this.sendUserMessage();
-            },
-
-            addMessageToUi(text, sender) {
-                const chatBody = document.getElementById('chatBody');
-                const msgDiv = document.createElement('div');
-                msgDiv.classList.add('chat-msg', sender);
-                
-                // Conversión de saltos de línea y formateos mínimos de Markdown
-                let formattedText = text
-                    .replace(/\n/g, '<br>')
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-                msgDiv.innerHTML = formattedText;
-                chatBody.appendChild(msgDiv);
-                
-                // Auto-scroll
-                chatBody.scrollTop = chatBody.scrollHeight;
-            },
-
-            addLoaderToUi() {
-                const chatBody = document.getElementById('chatBody');
-                const loaderDiv = document.createElement('div');
-                const id = "loader-" + Date.now();
-                loaderDiv.id = id;
-                loaderDiv.classList.add('chat-msg', 'bot');
-                loaderDiv.innerHTML = `
-                    <div class="loader-dots">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                `;
-                chatBody.appendChild(loaderDiv);
-                chatBody.scrollTop = chatBody.scrollHeight;
-                return id;
-            },
-
-            removeLoader(id) {
-                const loader = document.getElementById(id);
-                if (loader) loader.remove();
-            }
-        };
-
-        window.onload = () => ui.init();
+        // Exportamos a window para que los botones HTML puedan llamar a las funciones
+        window.ui = ui;
+        window.onload = () => window.ui.init();
     </script>
 </body>
 </html>
