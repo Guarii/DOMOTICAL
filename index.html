@@ -1,10 +1,10 @@
-<html>
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domotical</title>
+    <title>DomóticaHub - Catálogo Inteligente</title>
     
     <!-- Google Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -101,7 +101,7 @@
         .modal { width: 90%; max-width: 550px; max-height: 90vh; border-radius: var(--radius-xl); padding: 30px; overflow-y: auto; position: relative; }
         .close { position: absolute; top: 20px; right: 20px; cursor: pointer; color: #555; }
 
-        /* Filter Menu Specifics */
+        /* Filter Menu */
         .filter-section { margin-bottom: 24px; }
         .filter-section h4 { margin-bottom: 12px; color: #444; font-size: 0.95rem; }
         .sort-select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); font-family: inherit; font-size: 1rem; background: white; margin-bottom: 10px; }
@@ -159,7 +159,7 @@
 
     <header class="glass">
         <a href="#" class="logo" onclick="location.reload()">
-            <span class="material-symbols-rounded">nest_eco_leaf</span> Domotical
+            <span class="material-symbols-rounded">nest_eco_leaf</span> DomóticaHub
         </a>
         <div class="search-container">
             <span class="material-symbols-rounded icon-search">search</span>
@@ -182,7 +182,7 @@
 
     <main id="productGrid">
         <div style="text-align: center; grid-column: 1/-1; padding: 40px; color: #666;">
-            Cargando catálogo inteligente...
+            Conectando con la nube...
         </div>
     </main>
 
@@ -264,16 +264,16 @@
                 
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                     <div class="form-group">
-                        <label>Habitaciones (Selecciona varias)</label>
+                        <label>Habitaciones</label>
                         <div class="checkbox-grid" id="checkboxRooms"></div>
                     </div>
                     <div class="form-group">
-                        <label>Tipos (Selecciona varios)</label>
+                        <label>Tipos</label>
                         <div class="checkbox-grid" id="checkboxTypes"></div>
                     </div>
                 </div>
 
-                <button class="btn-full" id="saveBtn" onclick="admin.saveProduct()">Guardar Producto</button>
+                <button class="btn-full" id="saveBtn" onclick="admin.saveProduct()">Guardar en la Nube</button>
                 <button class="btn-full" id="cancelBtn" style="display:none; background:#888;" onclick="admin.resetForm()">Cancelar Edición</button>
             </div>
 
@@ -312,34 +312,35 @@
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // ==========================================
         // CONFIGURACIÓN DE FIREBASE
         // ==========================================
-        // Si subes esto a tu GitHub, reemplaza el bloque 'else' con tus claves de Firebase
         let firebaseConfig;
         if (typeof __firebase_config !== 'undefined') {
-            firebaseConfig = JSON.parse(__firebase_config); // Entorno de pruebas Canvas
+            firebaseConfig = JSON.parse(__firebase_config); 
         } else {
-            // Pon aquí las claves que obtuviste en console.firebase.google.com
-           firebaseConfig = {
-          apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
-          authDomain: "domotical-680de.firebaseapp.com",
-          projectId: "domotical-680de",
-          storageBucket: "domotical-680de.firebasestorage.app",
-          messagingSenderId: "923219132599",
-          appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
-          measurementId: "G-0J6JGDD1BK"
-        };
+            // Reemplaza esto cuando subas a GitHub
+            const firebaseConfig = {
+  apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
+  authDomain: "domotical-680de.firebaseapp.com",
+  projectId: "domotical-680de",
+  storageBucket: "domotical-680de.firebasestorage.app",
+  messagingSenderId: "923219132599",
+  appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
+  measurementId: "G-0J6JGDD1BK"
+};
         }
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Rutas dinámicas (compatibles con Canvas y tu propio GitHub)
+        // Control estricto de usuario para evitar bloqueos
+        let currentUser = null;
+
         const isCanvas = typeof __app_id !== 'undefined';
         const appId = isCanvas ? __app_id : 'default';
         const productsPath = isCanvas ? `artifacts/${appId}/public/data/products` : 'products';
@@ -350,15 +351,10 @@
         // ==========================================
         window.store = {
             products: [],
-            rooms: ['Salón', 'Cocina', 'Dormitorio', 'Baño', 'Exterior'], // Por defecto
-            types: ['Iluminación', 'Climatización', 'Seguridad', 'Energía'], // Por defecto
+            rooms: ['Salón', 'Cocina', 'Dormitorio', 'Baño', 'Exterior'],
+            types: ['Iluminación', 'Climatización', 'Seguridad', 'Energía'],
             cart: [],
-            filters: {
-                query: '',
-                rooms: [],
-                types: [],
-                sort: 'default'
-            }
+            filters: { query: '', rooms: [], types: [], sort: 'default' }
         };
 
         // ==========================================
@@ -370,13 +366,11 @@
                 this.updateCart();
             },
 
-            // --- Motor de Filtrado y Ordenación ---
             toggleFilter(type, value) {
                 const arr = window.store.filters[type];
                 const index = arr.indexOf(value);
                 if (index > -1) arr.splice(index, 1);
                 else arr.push(value);
-                
                 this.renderFilterModal();
                 this.applyFilters();
             },
@@ -394,7 +388,6 @@
                 window.store.filters.query = document.getElementById('searchInput').value.toLowerCase();
                 window.store.filters.sort = document.getElementById('sortSelect').value;
 
-                // Actualizar botón de filtro visualmente
                 const btn = document.getElementById('btnFilter');
                 if(window.store.filters.rooms.length > 0 || window.store.filters.types.length > 0 || window.store.filters.sort !== 'default'){
                     btn.classList.add('active-filters');
@@ -417,7 +410,6 @@
                         </div>
                     `).join('');
                 };
-
                 drawChips('filterRooms', window.store.rooms, window.store.filters.rooms, 'rooms');
                 drawChips('filterTypes', window.store.types, window.store.filters.types, 'types');
             },
@@ -426,7 +418,6 @@
                 const grid = document.getElementById('productGrid');
                 const f = window.store.filters;
 
-                // 1. Filtrar
                 let result = window.store.products.filter(p => {
                     const matchQuery = p.title.toLowerCase().includes(f.query) || p.desc.toLowerCase().includes(f.query);
                     const matchRoom = f.rooms.length === 0 || (p.rooms && f.rooms.some(r => p.rooms.includes(r)));
@@ -434,7 +425,6 @@
                     return matchQuery && matchRoom && matchType;
                 });
 
-                // 2. Ordenar
                 if (f.sort === 'price_asc') result.sort((a,b) => a.price - b.price);
                 if (f.sort === 'price_desc') result.sort((a,b) => b.price - a.price);
                 if (f.sort === 'name_asc') result.sort((a,b) => a.title.localeCompare(b.title));
@@ -448,7 +438,6 @@
                 grid.innerHTML = result.map(p => {
                     const rTags = (p.rooms || []).map(r => `<span class="tag-room">${r}</span>`).join('');
                     const tTags = (p.types || []).map(t => `<span class="tag-type">${t}</span>`).join('');
-                    
                     return `
                     <div class="card glass">
                         <img src="${p.img}" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=400'">
@@ -465,14 +454,11 @@
                 `}).join('');
             },
 
-            // --- Carrito Local ---
             loadCartLocally() {
                 const saved = localStorage.getItem('dh_cart_v2');
                 if (saved) window.store.cart = JSON.parse(saved);
             },
-            saveCartLocally() {
-                localStorage.setItem('dh_cart_v2', JSON.stringify(window.store.cart));
-            },
+            saveCartLocally() { localStorage.setItem('dh_cart_v2', JSON.stringify(window.store.cart)); },
             addToCart(id) {
                 const p = window.store.products.find(x => x.id === id);
                 const item = window.store.cart.find(x => x.id === id);
@@ -516,14 +502,13 @@
             },
             checkout() {
                 if (window.store.cart.length === 0) return;
-                this.toast('¡Pedido simulado con éxito!');
+                this.toast('¡Pedido completado con éxito!');
                 window.store.cart = [];
                 this.saveCartLocally();
                 this.updateCart();
                 this.toggleModal('cartModal', false);
             },
 
-            // --- Utilidades ---
             login() {
                 const p = document.getElementById('adminPass').value;
                 if (p === 'admin' || p === '') {
@@ -545,23 +530,20 @@
         };
 
         // ==========================================
-        // ADMINISTRACIÓN Y FIREBASE
+        // ADMINISTRACIÓN
         // ==========================================
         window.admin = {
             renderAdminView() {
-                // Checkboxes Rooms
                 const cbRooms = document.getElementById('checkboxRooms');
                 cbRooms.innerHTML = window.store.rooms.map(r => `
                     <label class="checkbox-label"><input type="checkbox" value="${r}" class="cb-room"> ${r}</label>
                 `).join('');
 
-                // Checkboxes Types
                 const cbTypes = document.getElementById('checkboxTypes');
                 cbTypes.innerHTML = window.store.types.map(t => `
                     <label class="checkbox-label"><input type="checkbox" value="${t}" class="cb-type"> ${t}</label>
                 `).join('');
 
-                // Lists for categories
                 document.getElementById('adminRoomList').innerHTML = window.store.rooms.map(r => `
                     <li style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #eee;">${r} <span class="material-symbols-rounded" style="color:#ea4335; cursor:pointer; font-size:18px;" onclick="admin.removeCategory('rooms', '${r}')">delete</span></li>
                 `).join('');
@@ -569,7 +551,6 @@
                     <li style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #eee;">${t} <span class="material-symbols-rounded" style="color:#ea4335; cursor:pointer; font-size:18px;" onclick="admin.removeCategory('types', '${t}')">delete</span></li>
                 `).join('');
 
-                // Product List
                 const pList = document.getElementById('adminProductList');
                 pList.innerHTML = window.store.products.map(p => `
                     <div class="admin-item">
@@ -586,6 +567,7 @@
             },
 
             async saveCategoriesToFirebase() {
+                if (!currentUser) return;
                 try {
                     await setDoc(doc(db, metaPath, 'categories'), {
                         rooms: window.store.rooms,
@@ -599,7 +581,7 @@
                 if (val && !window.store[listType].includes(val)) {
                     window.store[listType].push(val);
                     document.getElementById(inputId).value = '';
-                    this.saveCategoriesToFirebase(); // Auto-updates via snapshot
+                    this.saveCategoriesToFirebase(); 
                 }
             },
 
@@ -610,26 +592,35 @@
             },
 
             async saveProduct() {
+                if (!currentUser) return window.ui.toast('Espera un segundo, conectando...');
+                
                 const id = document.getElementById('editId').value || Date.now().toString();
                 const title = document.getElementById('pTitle').value;
                 const desc = document.getElementById('pDesc').value;
                 const price = parseFloat(document.getElementById('pPrice').value || 0);
                 const img = document.getElementById('pImg').value || 'https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=400';
                 
-                const selectedRooms = Array.from(document.querySelectorAll('.cb-room:checked')).map(cb => cb.value);
-                const selectedTypes = Array.from(document.querySelectorAll('.cb-type:checked')).map(cb => cb.value);
+                let selectedRooms = Array.from(document.querySelectorAll('.cb-room:checked')).map(cb => cb.value);
+                let selectedTypes = Array.from(document.querySelectorAll('.cb-type:checked')).map(cb => cb.value);
 
-                if (!title || selectedRooms.length === 0 || selectedTypes.length === 0) {
-                    return window.ui.toast('Añade título y al menos 1 habitación y 1 tipo.');
+                if (!title || isNaN(price) || price <= 0) {
+                    return window.ui.toast('Añade un título y un precio válido.');
                 }
+
+                // Autocompletar si se olvida para evitar fallos de renderizado
+                if (selectedRooms.length === 0 && window.store.rooms.length > 0) selectedRooms = [window.store.rooms[0]];
+                if (selectedTypes.length === 0 && window.store.types.length > 0) selectedTypes = [window.store.types[0]];
 
                 const productData = { id, title, desc, price, img, rooms: selectedRooms, types: selectedTypes };
 
                 try {
                     await setDoc(doc(db, productsPath, id), productData);
-                    window.ui.toast('Producto Guardado');
+                    window.ui.toast('¡Producto guardado en la nube!');
                     this.resetForm();
-                } catch(e) { console.error("Error", e); window.ui.toast('Error al guardar'); }
+                } catch(e) { 
+                    console.error("Error", e); 
+                    window.ui.toast('Error al guardar en la base de datos'); 
+                }
             },
 
             editProduct(id) {
@@ -651,6 +642,7 @@
             },
 
             async deleteProduct(id) {
+                if (!currentUser) return window.ui.toast('Espera un segundo, conectando...');
                 if (!confirm('¿Borrar definitivamente de la nube?')) return;
                 try {
                     await deleteDoc(doc(db, productsPath, id));
@@ -668,57 +660,97 @@
                 document.querySelectorAll('.cb-type').forEach(cb => cb.checked = false);
                 
                 document.getElementById('formTitle').textContent = 'Añadir Nuevo Producto';
-                document.getElementById('saveBtn').textContent = 'Guardar Producto';
+                document.getElementById('saveBtn').textContent = 'Guardar en la Nube';
                 document.getElementById('cancelBtn').style.display = 'none';
             }
         };
 
         // ==========================================
-        // INICIO Y CONEXIÓN EN TIEMPO REAL
+        // INICIO, AUTENTICACIÓN Y MIGRACIÓN
         // ==========================================
         async function startApp() {
-            // 1. Autenticación Anónima (Requisito para leer/escribir base de datos)
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-                await signInAnonymously(auth);
+            // 1. Iniciar Auth estrictamente primero
+            const initAuth = async () => {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            };
+            
+            try {
+                await initAuth();
+            } catch (error) {
+                console.error("Auth init failed:", error);
             }
 
-            window.ui.init();
+            // 2. Escuchar estado de conexión
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                if (user) {
+                    setupDatabaseListeners();
+                }
+            });
 
-            // 2. Escuchar Categorías en tiempo real
+            window.ui.init();
+        }
+
+        function setupDatabaseListeners() {
+            if (!currentUser) return;
+
+            // Revisar si existen datos antiguos en la memoria local y subirlos automáticamente
+            const oldLocalData = localStorage.getItem('dh_prods');
+            if (oldLocalData) {
+                try {
+                    const parsedOldData = JSON.parse(oldLocalData);
+                    parsedOldData.forEach(async (p) => {
+                        const pId = p.id.toString();
+                        await setDoc(doc(db, productsPath, pId), {
+                            id: pId, title: p.title, desc: p.desc, price: p.price, img: p.img,
+                            rooms: ['Salón'], // Default habitacion
+                            types: p.cat ? [p.cat] : ['General'] // Rescatar antigua categoria
+                        });
+                    });
+                    localStorage.removeItem('dh_prods'); // Limpiar para no repetir
+                    console.log("Datos antiguos migrados exitosamente a la nube.");
+                } catch(e) {}
+            }
+
+            // Escuchar Categorías
             onSnapshot(doc(db, metaPath, 'categories'), (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if(data.rooms) window.store.rooms = data.rooms;
                     if(data.types) window.store.types = data.types;
                 } else {
-                    // Si no existe, creamos las por defecto
                     admin.saveCategoriesToFirebase();
                 }
                 if (document.getElementById('adminDashboard').classList.contains('active')) {
                     window.admin.renderAdminView();
                 }
                 window.ui.renderFilterModal();
-            }, (error) => console.error("Error leyendo categorías", error));
+            }, (error) => console.error("Error cats", error));
 
-            // 3. Escuchar Productos en tiempo real
+            // Escuchar Productos
             onSnapshot(collection(db, productsPath), (snapshot) => {
                 window.store.products = [];
                 snapshot.forEach((doc) => {
                     window.store.products.push(doc.data());
                 });
-                window.ui.applyFilters(); // Renderiza usando los filtros activos
+                window.ui.applyFilters(); 
                 if (document.getElementById('adminDashboard').classList.contains('active')) {
                     window.admin.renderAdminView();
                 }
             }, (error) => {
-                console.error("Error leyendo productos", error);
-                document.getElementById('productGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;">Error de conexión. Asegúrate de configurar las reglas de Firebase.</div>';
+                document.getElementById('productGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;">Fallo de permisos en Firebase. Revisa las reglas.</div>';
             });
         }
 
+        // Arrancar
         startApp();
     </script>
 </body>
 </html>
+
+
+```
