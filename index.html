@@ -73,12 +73,10 @@
         }
 
         .search-wrapper { flex: 1; max-width: 500px; display: flex; gap: 8px; }
-        .search-box {
-            position: relative; flex: 1;
-        }
+        .search-box { position: relative; flex: 1; }
         .search-box input {
             width: 100%; padding: 12px 20px 12px 45px; border-radius: var(--radius-pill);
-            border: 1px solid var(--glass-border); background: rgba(255,255,255,0.8);
+            border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.8);
             font-family: inherit; font-size: 0.95rem; outline: none; transition: 0.3s;
         }
         .search-box input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px var(--primary-container); }
@@ -105,6 +103,12 @@
             position: absolute; top: 4px; right: 4px; background: #ea4335; color: white;
             font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;
+        }
+
+        /* Banner de estado de conexión */
+        #statusBanner {
+            background: #f59e0b; color: white; text-align: center; padding: 8px;
+            font-size: 0.85rem; font-weight: 600; display: none; z-index: 1001; position: relative;
         }
 
         /* ========================================================
@@ -146,6 +150,8 @@
 
         .empty-state { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #666; }
         .empty-state .material-symbols-rounded { font-size: 48px; color: #ccc; margin-bottom: 16px; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* ========================================================
            MODALES CENTRALES (Filtros & Login)
@@ -209,9 +215,9 @@
         .qty-controls button { border: none; background: none; cursor: pointer; font-size: 1.2rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; justify-content: center;}
 
         /* ========================================================
-           ADMIN DASHBOARD REDISEÑADO
+           ADMIN DASHBOARD
         ======================================================== */
-        #adminDashboard .modal { max-width: 800px; background: #f0f4f8; } /* Wider & distinct bg */
+        #adminDashboard .modal { max-width: 850px; background: #f0f4f8; }
         .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px;}
         .admin-card { background: white; padding: 24px; border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); }
         .admin-card h3 { margin-bottom: 16px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; color: var(--primary);}
@@ -235,16 +241,13 @@
         .btn-list.delete { color: #ea4335; }
         .btn-list:hover { background: rgba(0,0,0,0.05); }
 
-        /* Notificaciones (Toast) */
+        /* Notificaciones flotantes (Toast) */
         #toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
             background: #202124; color: white; padding: 12px 24px; border-radius: var(--radius-pill);
             transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 9999; font-weight: 500; display: flex; align-items: center; gap: 8px;
         }
         #toast.active { transform: translateX(-50%) translateY(0); }
-
-        /* Status Banner */
-        #statusBanner { background: #ea4335; color: white; text-align: center; padding: 6px; font-size: 0.8rem; font-weight: 600; display: none; }
 
         @media (max-width: 768px) {
             header { flex-wrap: wrap; }
@@ -256,7 +259,7 @@
 <body>
 
     <div class="ambient-bg"></div>
-    <div id="statusBanner">Modo Local Activo (Sin conexión a la base de datos en la nube)</div>
+    <div id="statusBanner">Modo Local Activo (Base de datos en la nube sin configurar o sin conexión)</div>
 
     <header class="glass">
         <a href="#" class="logo" onclick="ui.resetView()">
@@ -286,7 +289,7 @@
     <main id="productGrid">
         <div class="empty-state">
             <span class="material-symbols-rounded" style="animation: spin 2s linear infinite;">sync</span>
-            <p>Cargando catálogo...</p>
+            <p>Conectando con el catálogo...</p>
         </div>
     </main>
 
@@ -336,12 +339,8 @@
             </h2>
             <span class="material-symbols-rounded close-btn" style="position:static;" onclick="ui.closeCart()">close</span>
         </div>
-        <div class="drawer-content" id="cartContent">
-            <!-- Items del carrito -->
-        </div>
-        <div class="drawer-footer" id="cartFooter">
-            <!-- Footer con Total y Botón Checkout -->
-        </div>
+        <div class="drawer-content" id="cartContent"></div>
+        <div class="drawer-footer" id="cartFooter"></div>
     </div>
 
     <!-- ==========================================
@@ -355,6 +354,21 @@
                 <input type="password" id="adminPass" class="form-control" placeholder="Contraseña (admin)">
             </div>
             <button class="btn-main" onclick="admin.login()">Entrar al Panel</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MODAL: CONFIGURADOR DE CONFIRMACIONES PERSONALIZADAS (Sin alert nativo)
+    =========================================== -->
+    <div class="overlay" id="confirmModal">
+        <div class="modal glass" style="max-width: 400px; text-align: center;">
+            <span class="material-symbols-rounded" style="font-size: 48px; color: #ea4335; margin-bottom: 16px;">warning</span>
+            <h3 id="confirmTitle" style="margin-bottom: 12px;">¿Estás seguro?</h3>
+            <p id="confirmMessage" style="color: #666; margin-bottom: 24px; font-size: 0.9rem;">Esta acción no se puede deshacer.</p>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn-main" style="background: #e0e0e0; color: #333;" onclick="ui.closeConfirm(false)">Cancelar</button>
+                <button class="btn-main" style="background: #ea4335; margin-top: 0;" onclick="ui.closeConfirm(true)">Eliminar</button>
+            </div>
         </div>
     </div>
 
@@ -455,49 +469,68 @@
             types: ['Iluminación', 'Climatización', 'Seguridad', 'Energía'],
             cart: [],
             filters: { query: '', rooms: [], types: [], sort: 'default' },
-            isOnline: false, // Define si usamos Firebase o LocalStorage
+            isOnline: false,
         };
 
-        const LOCAL_KEYS = { PRODS: 'dh_local_prods', META: 'dh_local_meta', CART: 'dh_cart_v3' };
+        const LOCAL_KEYS = { PRODS: 'dh_local_prods_v3', META: 'dh_local_meta_v3', CART: 'dh_cart_v3' };
 
         let db, auth;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'domotica-hub';
         const productsPath = `artifacts/${appId}/public/data/products`;
         const metaPath = `artifacts/${appId}/public/data/meta`;
 
-        // 1. Carga inicial inmediata (Modo Local por defecto para velocidad)
+        let cloudUnsubscribeProducts = null;
+        let cloudUnsubscribeMeta = null;
+
+        // Carga inicial inmediata de datos locales como respaldo instantáneo
         function loadLocalData() {
             const lProds = localStorage.getItem(LOCAL_KEYS.PRODS);
             const lMeta = localStorage.getItem(LOCAL_KEYS.META);
             
-            if (lProds) window.store.products = JSON.parse(lProds);
-            else {
-                // Datos de muestra iniciales si no hay nada
+            if (lProds) {
+                window.store.products = JSON.parse(lProds);
+            } else {
                 window.store.products = [
-                    { id: '1', title: 'Cámara 360º Pro', desc: 'Vigilancia total con IA.', price: 89.90, img: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400', rooms: ['Exterior', 'Salón'], types: ['Seguridad'] },
-                    { id: '2', title: 'Termostato WiFi', desc: 'Ahorra energía fácilmente.', price: 129.00, img: 'https://images.unsplash.com/photo-1563453392212-326f5e854473?w=400', rooms: ['Salón', 'Dormitorio'], types: ['Climatización', 'Energía'] }
+                    { id: '1', title: 'Cámara 360º Pro', desc: 'Vigilancia total con detección de movimiento.', price: 89.90, img: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400', rooms: ['Exterior', 'Salón'], types: ['Seguridad'] },
+                    { id: '2', title: 'Termostato WiFi Smart', desc: 'Ahorra energía controlando la climatización cómodamente.', price: 129.00, img: 'https://images.unsplash.com/photo-1563453392212-326f5e854473?w=400', rooms: ['Salón', 'Dormitorio'], types: ['Climatización', 'Energía'] },
+                    { id: '3', title: 'Enchufe Inteligente Pro', desc: 'Monitoriza el consumo de tus electrodomésticos en tiempo real.', price: 24.90, img: 'https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=400', rooms: ['Cocina', 'Dormitorio'], types: ['Energía'] }
                 ];
+                localStorage.setItem(LOCAL_KEYS.PRODS, JSON.stringify(window.store.products));
             }
             
             if (lMeta) {
                 const meta = JSON.parse(lMeta);
                 window.store.rooms = meta.rooms || window.store.rooms;
                 window.store.types = meta.types || window.store.types;
+            } else {
+                saveLocalMeta();
             }
+        }
+
+        function saveLocalProducts() {
+            localStorage.setItem(LOCAL_KEYS.PRODS, JSON.stringify(window.store.products));
+        }
+
+        function saveLocalMeta() {
+            localStorage.setItem(LOCAL_KEYS.META, JSON.stringify({
+                rooms: window.store.rooms,
+                types: window.store.types
+            }));
         }
 
         // ==========================================
         // UI CONTROLLER
         // ==========================================
         window.ui = {
+            confirmCallback: null,
+
             init() {
-                // Cargar carrito local
                 const c = localStorage.getItem(LOCAL_KEYS.CART);
                 if (c) window.store.cart = JSON.parse(c);
                 
                 this.updateCartUI();
                 this.renderFilterModal();
-                this.applyFilters(); // Renderiza productos iniciales
+                this.applyFilters();
             },
 
             resetView() {
@@ -513,6 +546,22 @@
             openCart() { document.getElementById('cartOverlay').classList.add('active'); document.getElementById('cartDrawer').classList.add('active'); },
             closeCart() { document.getElementById('cartOverlay').classList.remove('active'); document.getElementById('cartDrawer').classList.remove('active'); },
             openAdminLogin() { this.openModal('adminLoginModal'); document.getElementById('adminPass').value = ''; },
+
+            // --- Diálogos de Confirmación Interactivos ---
+            confirm(title, msg, onConfirm) {
+                document.getElementById('confirmTitle').textContent = title;
+                document.getElementById('confirmMessage').textContent = msg;
+                this.confirmCallback = onConfirm;
+                this.openModal('confirmModal');
+            },
+
+            closeConfirm(approved) {
+                this.closeModal('confirmModal');
+                if (approved && this.confirmCallback) {
+                    this.confirmCallback();
+                }
+                this.confirmCallback = null;
+            },
 
             // --- Filtros y Renderizado de Productos ---
             toggleFilter(type, value) {
@@ -606,6 +655,7 @@
             // --- Carrito ---
             addToCart(id) {
                 const p = window.store.products.find(x => x.id === id);
+                if (!p) return;
                 const item = window.store.cart.find(x => x.id === id);
                 if (item) item.qty++; else window.store.cart.push({ ...p, qty: 1 });
                 localStorage.setItem(LOCAL_KEYS.CART, JSON.stringify(window.store.cart));
@@ -655,6 +705,7 @@
             
             changeQty(id, d) {
                 const i = window.store.cart.find(x => x.id === id);
+                if (!i) return;
                 i.qty += d;
                 if (i.qty <= 0) window.store.cart = window.store.cart.filter(x => x.id !== id);
                 localStorage.setItem(LOCAL_KEYS.CART, JSON.stringify(window.store.cart));
@@ -709,7 +760,7 @@
                 document.getElementById('adminProductList').innerHTML = window.store.products.map(p => `
                     <div class="list-item" style="padding: 8px;">
                         <div style="display:flex; align-items:center; gap:12px;">
-                            <img src="${p.img}" width="40" height="40" style="border-radius:8px; object-fit:cover;">
+                            <img src="${p.img}" width="40" height="40" style="border-radius:8px; object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=200'">
                             <div>
                                 <div style="font-weight:600; font-size:0.9rem; line-height:1.2;">${p.title}</div>
                                 <div style="font-size:0.8rem; color:#666;">${p.price.toFixed(2)}€</div>
@@ -723,11 +774,15 @@
                 `).join('');
             },
 
-            // --- Lógica de Guardado (Híbrida: Nube o Local) ---
             async syncMeta() {
                 const metaData = { rooms: window.store.rooms, types: window.store.types };
                 if (window.store.isOnline) {
-                    try { await setDoc(doc(db, metaPath, 'categories'), metaData); } catch(e) { console.error("Cloud Meta error", e); }
+                    try { 
+                        await setDoc(doc(db, metaPath, 'categories'), metaData); 
+                    } catch(e) { 
+                        console.error("Fallo al guardar categorías en la nube:", e); 
+                        window.ui.toast('Error al guardar categoría en la nube', 'error');
+                    }
                 } else {
                     localStorage.setItem(LOCAL_KEYS.META, JSON.stringify(metaData));
                 }
@@ -746,9 +801,15 @@
             },
 
             removeCategory(type, val) {
-                if(!confirm(`¿Eliminar la categoría "${val}"?`)) return;
-                window.store[type] = window.store[type].filter(x => x !== val);
-                this.syncMeta();
+                window.ui.confirm(
+                    '¿Eliminar categoría?',
+                    `¿Quieres eliminar "${val}"? Los productos vinculados perderán esta etiqueta.`,
+                    () => {
+                        window.store[type] = window.store[type].filter(x => x !== val);
+                        this.syncMeta();
+                        window.ui.toast('Categoría eliminada', 'delete');
+                    }
+                );
             },
 
             async saveProduct() {
@@ -770,15 +831,19 @@
                 if (window.store.isOnline) {
                     try {
                         await setDoc(doc(db, productsPath, id), p);
-                        window.ui.toast('Guardado en la Nube', 'cloud_done');
-                    } catch(e) { window.ui.toast('Error al sincronizar', 'error'); }
+                        window.ui.toast('Sincronizado en la Nube', 'cloud_done');
+                    } catch(e) { 
+                        console.error("Firestore save error:", e);
+                        window.ui.toast('Fallo al guardar en la nube. Cambiando temporalmente a local.', 'warning');
+                        this.fallbackToLocalMode();
+                    }
                 } else {
                     const idx = window.store.products.findIndex(x => x.id === id);
                     if (idx > -1) window.store.products[idx] = p; else window.store.products.unshift(p);
-                    localStorage.setItem(LOCAL_KEYS.PRODS, JSON.stringify(window.store.products));
+                    saveLocalProducts();
                     window.ui.applyFilters();
                     this.renderAdminView();
-                    window.ui.toast('Guardado Localmente', 'save');
+                    window.ui.toast('Guardado en memoria local', 'save');
                 }
                 this.resetForm();
             },
@@ -801,19 +866,43 @@
                 document.querySelector('#adminDashboard .modal').scrollTo({top: 0, behavior: 'smooth'});
             },
 
-            async deleteProduct(id) {
-                if (!confirm('¿Borrar definitivamente este producto?')) return;
+            deleteProduct(id) {
+                window.ui.confirm(
+                    '¿Eliminar producto?',
+                    '¿Estás seguro de que quieres borrar este producto del catálogo permanentemente?',
+                    async () => {
+                        if (window.store.isOnline) {
+                            try { 
+                                await deleteDoc(doc(db, productsPath, id)); 
+                                window.ui.toast('Eliminado de la nube', 'delete'); 
+                            } catch(e) { 
+                                console.error(e); 
+                                window.ui.toast('Fallo de permisos en la nube al eliminar', 'error');
+                            }
+                        } else {
+                            window.store.products = window.store.products.filter(x => x.id !== id);
+                            saveLocalProducts();
+                            window.ui.applyFilters();
+                            this.renderAdminView();
+                            window.ui.toast('Eliminado localmente', 'delete');
+                        }
+                    }
+                );
+            },
+
+            fallbackToLocalMode() {
+                // Función para pasar al modo local dinámicamente si hay errores sobre la marcha
+                window.store.isOnline = false;
+                document.getElementById('statusBanner').style.display = 'block';
+                document.getElementById('statusBanner').textContent = 'Modo Local Activo (Se perdieron los permisos o la conexión)';
                 
-                if (window.store.isOnline) {
-                    try { await deleteDoc(doc(db, productsPath, id)); window.ui.toast('Eliminado de la nube', 'delete'); }
-                    catch(e) { console.error(e); }
-                } else {
-                    window.store.products = window.store.products.filter(x => x.id !== id);
-                    localStorage.setItem(LOCAL_KEYS.PRODS, JSON.stringify(window.store.products));
-                    window.ui.applyFilters();
-                    this.renderAdminView();
-                    window.ui.toast('Eliminado', 'delete');
-                }
+                // Limpiar listeners si estaban activos
+                if (cloudUnsubscribeProducts) { try { cloudUnsubscribeProducts(); } catch(e) {} }
+                if (cloudUnsubscribeMeta) { try { cloudUnsubscribeMeta(); } catch(e) {} }
+                
+                loadLocalData();
+                window.ui.applyFilters();
+                if (document.getElementById('adminDashboard').classList.contains('active')) this.renderAdminView();
             },
 
             resetForm() {
@@ -835,19 +924,17 @@
         // INICIO DE APLICACIÓN Y CONEXIÓN A NUBE
         // ==========================================
         async function bootApp() {
-            // 1. Cargar localmente primero SIEMPRE para que la app no "se cuelgue"
+            // 1. Cargar datos locales de forma inmediata para asegurar renderizado instantáneo
             loadLocalData();
             window.ui.init();
 
-            // 2. Intentar conectar a Firebase de forma segura
-            try {
-                let configToUse = null;
-                
-                if (typeof __firebase_config !== 'undefined') {
-                    configToUse = JSON.parse(__firebase_config);
-                } else {
-                    // CONFIGURACIÓN MANUAL PARA GITHUB (Reemplaza los valores vacíos con los de tu proyecto de Firebase)
-                   const firebaseConfig = {
+            // 2. Comprobar si las credenciales de Firebase son reales y no los textos por defecto
+            let configToUse = null;
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                configToUse = JSON.parse(__firebase_config);
+            } else {
+                // Credenciales manuales que introduces tú en GitHub
+                const manualConfig = {
   apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
   authDomain: "domotical-680de.firebaseapp.com",
   projectId: "domotical-680de",
@@ -856,40 +943,56 @@
   appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
   measurementId: "G-0J6JGDD1BK"
 };
+                // Validación para evitar bloquear la web si no se han rellenado las credenciales reales
+                const isValid = manualConfig.apiKey && 
+                                manualConfig.apiKey !== "" && 
+                                !manualConfig.apiKey.startsWith("TU_") &&
+                                manualConfig.projectId && 
+                                !manualConfig.projectId.startsWith("TU_");
+                
+                if (isValid) configToUse = manualConfig;
+            }
 
+            if (!configToUse) {
+                // Sin configurar: Modo Local silencioso y limpio
+                document.getElementById('statusBanner').style.display = 'block';
+                return;
+            }
 
-                if (configToUse) {
-                    const appObj = initializeApp(configToUse);
-                    auth = getAuth(appObj);
-                    db = getFirestore(appObj);
+            // 3. Conexión asíncrona segura con Firebase
+            try {
+                const appObj = initializeApp(configToUse);
+                auth = getAuth(appObj);
+                db = getFirestore(appObj);
 
-                    // Login anónimo necesario para reglas seguras
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
+                // Autenticación con límite de tiempo (Timeout) para evitar congelamientos si no hay red
+                const authPromise = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token)
+                    ? signInWithCustomToken(auth, __initial_auth_token)
+                    : signInAnonymously(auth);
 
-                    // Éxito: Establecer modo Online
-                    window.store.isOnline = true;
-                    document.getElementById('statusBanner').style.display = 'none';
-                    setupCloudSync();
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Tiempo de espera agotado")), 4500));
+                
+                await Promise.race([authPromise, timeoutPromise]);
 
-                } else {
-                    // No hay configuración, mostrar banner de Modo Local
-                    document.getElementById('statusBanner').style.display = 'block';
-                }
+                // Éxito en Autenticación: Escuchar cambios en la nube con capturas de errores
+                window.store.isOnline = true;
+                document.getElementById('statusBanner').style.display = 'none';
+                setupCloudSync();
 
             } catch (error) {
-                console.error("No se pudo conectar a la nube, continuando en Modo Local.", error);
+                console.warn("Fallo de conexión o de credenciales. Usando modo local offline.", error);
                 document.getElementById('statusBanner').style.display = 'block';
+                document.getElementById('statusBanner').textContent = 'Modo Local Activo (No se pudo verificar la conexión en la nube)';
+                window.store.isOnline = false;
+                // Forzar render de respaldo inmediato
+                window.ui.applyFilters();
             }
         }
 
-        // 3. Sincronización en tiempo real si hay éxito
+        // 4. Sincronización robusta en tiempo real con manejador de errores de permisos
         function setupCloudSync() {
-            // Sincronizar Categorías
-            onSnapshot(doc(db, metaPath, 'categories'), (docSnap) => {
+            // Sincronizar Categorías en la Nube
+            cloudUnsubscribeMeta = onSnapshot(doc(db, metaPath, 'categories'), (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     window.store.rooms = data.rooms || window.store.rooms;
@@ -897,21 +1000,28 @@
                     window.ui.renderFilterModal();
                     if (document.getElementById('adminDashboard').classList.contains('active')) window.admin.renderAdminView();
                 } else {
-                    admin.syncMeta(); // Crear por defecto
+                    window.admin.syncMeta(); 
                 }
+            }, (error) => {
+                console.warn("Error de lectura en metadatos de Firestore (posibles reglas incorrectas):", error);
+                // Si la base de datos bloquea el acceso por reglas, pasamos a modo local
+                window.admin.fallbackToLocalMode();
             });
 
-            // Sincronizar Productos
-            onSnapshot(collection(db, productsPath), (snapshot) => {
+            // Sincronizar Productos en la Nube
+            cloudUnsubscribeProducts = onSnapshot(collection(db, productsPath), (snapshot) => {
                 window.store.products = [];
                 snapshot.forEach(doc => window.store.products.push(doc.data()));
-                window.ui.applyFilters(); // Redibuja con datos de la nube
+                window.ui.applyFilters(); 
                 if (document.getElementById('adminDashboard').classList.contains('active')) window.admin.renderAdminView();
+            }, (error) => {
+                console.warn("Error de lectura en colección de productos de Firestore (posibles reglas incorrectas):", error);
+                window.admin.fallbackToLocalMode();
             });
         }
 
-        // Arrancar
-        bootApp();
+        // Arrancar aplicación
+        window.onload = bootApp;
     </script>
 </body>
 </html>
