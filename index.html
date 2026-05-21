@@ -847,17 +847,16 @@
                     configToUse = JSON.parse(__firebase_config);
                 } else {
                     // CONFIGURACIÓN MANUAL PARA GITHUB (Reemplaza los valores vacíos con los de tu proyecto de Firebase)
-                    const manualConfig = {
-                        apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls", // Ej: "AIzaSy..."
-                        authDomain: "domotical-680de.firebaseapp.com",
-                        projectId: "domotical-680de",
-                        storageBucket: "domotical-680de.firebasestorage.app",
-                        messagingSenderId: "923219132599",
-                        appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
-                        measurementId: "G-0J6JGDD1BK"
-                    };
-                    if (manualConfig.apiKey !== "") configToUse = manualConfig;
-                }
+                   const firebaseConfig = {
+  apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
+  authDomain: "domotical-680de.firebaseapp.com",
+  projectId: "domotical-680de",
+  storageBucket: "domotical-680de.firebasestorage.app",
+  messagingSenderId: "923219132599",
+  appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
+  measurementId: "G-0J6JGDD1BK"
+};
+
 
                 if (configToUse) {
                     const appObj = initializeApp(configToUse);
