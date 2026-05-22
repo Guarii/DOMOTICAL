@@ -20,10 +20,10 @@
             --primary-container: #d3e3fd;
             --surface: #f8f9fa;
             --on-surface: #1f1f1f;
-            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-bg: rgba(255, 255, 255, 0.8);
             --glass-border: rgba(255, 255, 255, 0.6);
             --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
             --radius-xl: 24px;
             --radius-lg: 16px;
             --radius-pill: 50px;
@@ -40,6 +40,7 @@
             overflow-x: hidden;
         }
 
+        /* Fondo Animado Ambient Glow */
         .ambient-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
             background: radial-gradient(circle at 10% 10%, #d3e3fd 0%, transparent 40%),
@@ -49,8 +50,8 @@
 
         .glass {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--glass-border);
             box-shadow: var(--shadow-sm);
         }
@@ -61,7 +62,6 @@
         header {
             position: sticky; top: 0; z-index: 100; padding: 12px 5%;
             display: flex; align-items: center; justify-content: space-between; gap: 16px;
-            transition: all 0.3s ease;
         }
 
         .logo {
@@ -107,16 +107,12 @@
             background: #f59e0b; color: white; text-align: center; padding: 8px;
             font-size: 0.85rem; font-weight: 600; display: none; z-index: 1001; position: relative;
         }
-        #statusBanner.success { background: #10b981; }
 
         /* ========================================================
            CATÁLOGO DE PRODUCTOS (GRID)
         ======================================================== */
         main {
-            padding: 30px 5% 60px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
+            padding: 30px 5% 60px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;
         }
 
         .card {
@@ -134,7 +130,7 @@
         .tag-type { background: #fce4ec; color: #c2185b; }
         
         .card-title { font-weight: 600; font-size: 1.2rem; margin-bottom: 8px; line-height: 1.2;}
-        .card-desc { font-size: 0.85rem; color: #666; margin-bottom: 20px; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-desc { font-size: 0.85rem; color: #666; margin-bottom: 20px; flex: 1; }
         
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .price { font-weight: 700; font-size: 1.3rem; color: var(--on-surface); }
@@ -151,7 +147,7 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* ========================================================
-           MODALES CENTRALES (Filtros & Login)
+           MODALES CENTRALES Y OVERLAYS
         ======================================================== */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -160,6 +156,9 @@
             z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s;
         }
         .overlay.active { opacity: 1; pointer-events: all; }
+        
+        /* Modales Especiales: Z-Index alto para no quedar detrás */
+        #confirmModal { z-index: 2500 !important; }
         
         .modal {
             width: 90%; max-width: 500px; max-height: 90vh; border-radius: var(--radius-xl);
@@ -226,7 +225,7 @@
         
         .btn-main { width: 100%; padding: 14px; border-radius: var(--radius-pill); border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer; font-size: 1rem; font-family: inherit; transition: 0.3s; margin-top: 8px;}
         .btn-main:hover { background: var(--primary-hover); box-shadow: 0 4px 12px rgba(26,115,232,0.3); }
-        .btn-sync { background: #10b981; } .btn-sync:hover { background: #059669; }
+        .btn-sync { background: #10b981; margin-bottom: 20px;} .btn-sync:hover { background: #059669; }
 
         .checkbox-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 120px; overflow-y: auto; padding: 8px; border: 1px solid #eee; border-radius: 12px; background: #fafafa;}
         .checkbox-container label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 400; cursor: pointer; margin: 0;}
@@ -239,6 +238,10 @@
         .btn-list.delete { color: #ea4335; }
         .btn-list:hover { background: rgba(0,0,0,0.05); }
 
+        #dbStatusIndicator { font-size: 0.8rem; font-weight: 600; padding: 4px 12px; border-radius: 50px; background: #ea4335; color: white;}
+        #dbStatusIndicator.online { background: #10b981; }
+
+        /* Notificaciones flotantes (Toast) */
         #toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
             background: #202124; color: white; padding: 12px 24px; border-radius: var(--radius-pill);
@@ -256,7 +259,7 @@
 <body>
 
     <div class="ambient-bg"></div>
-    <div id="statusBanner">Conectando...</div>
+    <div id="statusBanner">Inicializando sistema...</div>
 
     <header class="glass">
         <a href="#" class="logo" onclick="ui.resetView()">
@@ -286,7 +289,7 @@
     <main id="productGrid">
         <div class="empty-state">
             <span class="material-symbols-rounded" style="animation: spin 2s linear infinite;">sync</span>
-            <p>Cargando tu catálogo...</p>
+            <p>Conectando con el catálogo...</p>
         </div>
     </main>
 
@@ -351,7 +354,7 @@
         </div>
     </div>
 
-    <!-- Modal Confirmación -->
+    <!-- Modal Confirmación Z-INDEX ALTO -->
     <div class="overlay" id="confirmModal">
         <div class="modal glass" style="max-width: 400px; text-align: center;">
             <span class="material-symbols-rounded" style="font-size: 48px; color: #ea4335; margin-bottom: 16px;">warning</span>
@@ -367,14 +370,18 @@
     <!-- Modal Admin Dashboard -->
     <div class="overlay" id="adminDashboard" style="overflow-y:auto; padding: 20px 0;">
         <div class="modal glass" style="margin: auto; width: 95%;">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="display:flex; align-items: center; gap:8px;"><span class="material-symbols-rounded" style="color:var(--primary)">dashboard</span> Panel de Control</h2>
+            
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                <h2 style="display:flex; align-items: center; gap:8px;">
+                    <span class="material-symbols-rounded" style="color:var(--primary)">dashboard</span> Panel de Control
+                    <span id="dbStatusIndicator">Modo Local</span>
+                </h2>
                 <button class="btn-main" style="width: auto; padding: 8px 16px; margin: 0; background: #ea4335;" onclick="ui.closeModal('adminDashboard')">Cerrar Panel</button>
             </div>
 
             <!-- Botón de Sincronización a Nube -->
-            <button class="btn-main btn-sync" id="btnForceSync" style="margin-bottom: 20px; display: none;" onclick="admin.forceSyncToCloud()">
-                <span class="material-symbols-rounded">cloud_upload</span> Sincronizar Catálogo Local con la Nube
+            <button class="btn-main btn-sync" id="btnForceSync" style="display: none;" onclick="admin.forceSyncToCloud()">
+                <span class="material-symbols-rounded">cloud_upload</span> Subir Catálogo Local a la Nube
             </button>
 
             <div class="admin-grid">
@@ -453,8 +460,16 @@
         import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // ==========================================
-        // ESTADO GLOBAL & ALMACENAMIENTO LOCAL
+        // 1. SISTEMA SEGURO DE ALMACENAMIENTO (Evita cuelgues de iframe)
         // ==========================================
+        const storage = {
+            get: (k) => { try { return localStorage.getItem(k); } catch(e) { return null; } },
+            set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} },
+            remove: (k) => { try { localStorage.removeItem(k); } catch(e) {} }
+        };
+
+        const LOCAL_KEYS = { PRODS: 'dh_local_prods_v4', META: 'dh_local_meta_v4', CART: 'dh_cart_v4' };
+
         window.store = {
             products: [],
             rooms: ['Salón', 'Cocina', 'Dormitorio', 'Baño', 'Exterior'],
@@ -464,97 +479,84 @@
             isOnline: false,
         };
 
-        const LOCAL_KEYS = { PRODS: 'dh_local_prods_v3', META: 'dh_local_meta_v3', CART: 'dh_cart_v3' };
-
+        // ==========================================
+        // 2. CONFIGURACIÓN E INTELIGENCIA DE CONEXIÓN
+        // ==========================================
         let db, auth;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'domotica-hub';
-        const productsPath = `artifacts/${appId}/public/data/products`;
-        const metaPath = `artifacts/${appId}/public/data/meta`;
+        let productsPath = 'products'; // Por defecto tu BD personal
+        let metaPath = 'meta';
+
+        // ⚠️ PEGA AQUÍ TUS CLAVES REALES DE FIREBASE (las mismas de tu captura) ⚠️
+        const manualConfig = {
+            apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
+  authDomain: "domotical-680de.firebaseapp.com",
+  projectId: "domotical-680de",
+  storageBucket: "domotical-680de.firebasestorage.app",
+  messagingSenderId: "923219132599",
+  appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
+  measurementId: "G-0J6JGDD1BK"
+        };
+
+        // ¿El usuario ha rellenado las claves reales?
+        const hasCustomConfig = manualConfig.apiKey && manualConfig.apiKey.length > 10 && !manualConfig.apiKey.startsWith("TU_");
 
         // ==========================================
-        // SISTEMA DE MIGRACIÓN: RESCATADOR DE DATOS ANTIGUOS
+        // MIGRACIÓN DE DATOS (Recupera tus productos antiguos)
         // ==========================================
         function migrateOldData() {
-            // Buscamos todas las variables que se hayan usado en versiones anteriores
-            const legacyKeys = ['domotica_prods', 'sh_products', 'domo_prods', 'dh_prods'];
-            let rescuedProducts = [];
-            let foundOldData = false;
-
-            legacyKeys.forEach(key => {
-                const oldDataStr = localStorage.getItem(key);
-                if (oldDataStr) {
+            const legacyKeys = ['domotica_prods', 'sh_products', 'domo_prods', 'dh_prods', 'dh_local_prods_v3'];
+            let rescued = [];
+            
+            legacyKeys.forEach(k => {
+                const data = storage.get(k);
+                if (data) {
                     try {
-                        const parsedData = JSON.parse(oldDataStr);
-                        rescuedProducts = rescuedProducts.concat(parsedData);
-                        localStorage.removeItem(key); // Limpiamos la vieja key
-                        foundOldData = true;
-                    } catch(e) { console.error("Error leyendo datos antiguos:", e); }
+                        const parsed = JSON.parse(data);
+                        rescued = rescued.concat(parsed);
+                        storage.remove(k);
+                    } catch(e) {}
                 }
             });
 
-            if (foundOldData) {
-                console.log("¡Datos antiguos rescatados!", rescuedProducts);
-                // Convertimos los productos viejos al nuevo formato (rooms / types)
-                const standardizedProducts = rescuedProducts.map(p => {
-                    const desc = p.description || p.desc || '';
-                    const img = p.image || p.img || 'https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=400';
-                    
-                    // Extraer antiguas categorías para meterlas en "Tipos"
+            if (rescued.length > 0) {
+                const standardized = rescued.map(p => {
                     let oldCats = [];
                     if (Array.isArray(p.categories)) oldCats = p.categories;
                     else if (Array.isArray(p.cats)) oldCats = p.cats;
+                    else if (Array.isArray(p.types)) oldCats = p.types;
                     else if (p.cat) oldCats = [p.cat];
 
                     return {
                         id: p.id ? p.id.toString() : Date.now().toString(),
                         title: p.title || 'Producto Recuperado',
-                        desc: desc,
+                        desc: p.description || p.desc || '',
                         price: parseFloat(p.price) || 0,
-                        img: img,
-                        rooms: ['General'], // Por defecto
+                        img: p.image || p.img || 'https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=400',
+                        rooms: Array.isArray(p.rooms) && p.rooms.length > 0 ? p.rooms : ['General'],
                         types: oldCats.length > 0 ? oldCats : ['Otros']
                     };
                 });
 
-                // Los mezclamos con la base de datos actual (para no borrar los nuevos)
-                let currentLocalProds = [];
-                try {
-                    currentLocalProds = JSON.parse(localStorage.getItem(LOCAL_KEYS.PRODS) || '[]');
-                } catch(e) {}
-
-                // Evitar duplicados por título
-                const finalProducts = [...currentLocalProds];
-                standardizedProducts.forEach(sp => {
-                    if (!finalProducts.find(cp => cp.title === sp.title)) {
-                        finalProducts.push(sp);
-                    }
+                let current = [];
+                try { current = JSON.parse(storage.get(LOCAL_KEYS.PRODS) || '[]'); } catch(e){}
+                
+                // Evitamos duplicados por título
+                standardized.forEach(sp => {
+                    if (!current.find(cp => cp.title === sp.title)) current.push(sp);
                 });
-
-                // Guardar en la variable moderna
-                localStorage.setItem(LOCAL_KEYS.PRODS, JSON.stringify(finalProducts));
-                window.ui.toast('Productos antiguos recuperados con éxito', 'auto_awesome');
+                storage.set(LOCAL_KEYS.PRODS, JSON.stringify(current));
             }
         }
 
-        // ==========================================
-        // CARGA LOCAL DE DATOS
-        // ==========================================
         function loadLocalData() {
-            migrateOldData(); // 1. Rescatar datos primero
-
-            const lProds = localStorage.getItem(LOCAL_KEYS.PRODS);
-            const lMeta = localStorage.getItem(LOCAL_KEYS.META);
+            migrateOldData();
+            
+            const lProds = storage.get(LOCAL_KEYS.PRODS);
+            const lMeta = storage.get(LOCAL_KEYS.META);
             
             if (lProds) {
                 window.store.products = JSON.parse(lProds);
-            } else {
-                // Catálogo de muestra solo si está totalmente vacío
-                window.store.products = [
-                    { id: '1', title: 'Cámara 360º Pro', desc: 'Vigilancia total con detección.', price: 89.90, img: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400', rooms: ['Exterior', 'Salón'], types: ['Seguridad'] }
-                ];
-                saveLocalProducts();
             }
-            
             if (lMeta) {
                 const meta = JSON.parse(lMeta);
                 window.store.rooms = meta.rooms || window.store.rooms;
@@ -562,8 +564,8 @@
             }
         }
 
-        function saveLocalProducts() { localStorage.setItem(LOCAL_KEYS.PRODS, JSON.stringify(window.store.products)); }
-        function saveLocalMeta() { localStorage.setItem(LOCAL_KEYS.META, JSON.stringify({ rooms: window.store.rooms, types: window.store.types })); }
+        function saveLocalProducts() { storage.set(LOCAL_KEYS.PRODS, JSON.stringify(window.store.products)); }
+        function saveLocalMeta() { storage.set(LOCAL_KEYS.META, JSON.stringify({ rooms: window.store.rooms, types: window.store.types })); }
 
         // ==========================================
         // UI CONTROLLER
@@ -572,7 +574,7 @@
             confirmCallback: null,
 
             init() {
-                const c = localStorage.getItem(LOCAL_KEYS.CART);
+                const c = storage.get(LOCAL_KEYS.CART);
                 if (c) window.store.cart = JSON.parse(c);
                 this.updateCartUI();
                 this.renderFilterModal();
@@ -593,7 +595,6 @@
                 this.confirmCallback = onConfirm;
                 this.openModal('confirmModal');
             },
-
             closeConfirm(approved) {
                 this.closeModal('confirmModal');
                 if (approved && this.confirmCallback) this.confirmCallback();
@@ -643,8 +644,8 @@
 
             drawProducts(products) {
                 const grid = document.getElementById('productGrid');
-                if (products.length === 0) {
-                    grid.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">search_off</span><p>No se encontraron productos.</p></div>';
+                if (!products || products.length === 0) {
+                    grid.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">inventory_2</span><p>No se han encontrado productos.</p></div>';
                     return;
                 }
                 grid.innerHTML = products.map(p => {
@@ -683,7 +684,7 @@
                 if (!p) return;
                 const item = window.store.cart.find(x => x.id === id);
                 if (item) item.qty++; else window.store.cart.push({ ...p, qty: 1 });
-                localStorage.setItem(LOCAL_KEYS.CART, JSON.stringify(window.store.cart));
+                storage.set(LOCAL_KEYS.CART, JSON.stringify(window.store.cart));
                 this.updateCartUI();
                 this.toast('Añadido a la cesta', 'check_circle');
             },
@@ -722,14 +723,14 @@
                 const i = window.store.cart.find(x => x.id === id);
                 if (!i) return; i.qty += d;
                 if (i.qty <= 0) window.store.cart = window.store.cart.filter(x => x.id !== id);
-                localStorage.setItem(LOCAL_KEYS.CART, JSON.stringify(window.store.cart));
+                storage.set(LOCAL_KEYS.CART, JSON.stringify(window.store.cart));
                 this.updateCartUI();
             },
             
             checkout() {
                 if (window.store.cart.length === 0) return;
                 this.toast('¡Pedido procesado de forma simulada!', 'local_shipping');
-                window.store.cart = []; localStorage.setItem(LOCAL_KEYS.CART, JSON.stringify([]));
+                window.store.cart = []; storage.set(LOCAL_KEYS.CART, JSON.stringify([]));
                 this.updateCartUI(); this.closeCart();
             },
 
@@ -738,11 +739,24 @@
                 t.innerHTML = `<span class="material-symbols-rounded">${icon}</span> ${m}`;
                 t.classList.add('active');
                 setTimeout(() => t.classList.remove('active'), 3000);
+            },
+            
+            updateStatus(msg, isOnline) {
+                const b = document.getElementById('statusBanner');
+                b.textContent = msg; 
+                b.style.display = 'block';
+                b.className = isOnline ? 'success' : '';
+                
+                const ind = document.getElementById('dbStatusIndicator');
+                ind.textContent = isOnline ? 'Nube Firebase' : 'Modo Local';
+                ind.className = isOnline ? 'online' : '';
+                
+                if(isOnline) setTimeout(() => b.style.display = 'none', 3000);
             }
         };
 
         // ==========================================
-        // ADMINISTRACIÓN (Lógica Admin)
+        // ADMINISTRACIÓN
         // ==========================================
         window.admin = {
             login() {
@@ -769,7 +783,7 @@
                     <div class="list-item" style="padding: 8px;">
                         <div style="display:flex; align-items:center; gap:12px;">
                             <img src="${p.img}" width="40" height="40" style="border-radius:8px; object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=200'">
-                            <div><div style="font-weight:600; font-size:0.9rem;">${p.title}</div><div style="font-size:0.8rem; color:#666;">${p.price.toFixed(2)}€</div></div>
+                            <div><div style="font-weight:600; font-size:0.9rem; line-height:1.2;">${p.title}</div><div style="font-size:0.8rem; color:#666;">${p.price.toFixed(2)}€</div></div>
                         </div>
                         <div class="list-actions">
                             <button class="btn-list edit" onclick="admin.editProduct('${p.id}')"><span class="material-symbols-rounded">edit</span></button>
@@ -777,14 +791,13 @@
                         </div>
                     </div>`).join('');
                 
-                // Mostrar botón de forzar sincronización si estamos online pero operando en modo mixto
                 if (window.store.isOnline) {
                     document.getElementById('btnForceSync').style.display = 'flex';
                 }
             },
 
             async syncMeta() {
-                saveLocalMeta(); // Siempre guardamos local por seguridad
+                saveLocalMeta(); 
                 if (window.store.isOnline) {
                     try { await setDoc(doc(db, metaPath, 'categories'), { rooms: window.store.rooms, types: window.store.types }); } catch(e) {}
                 }
@@ -800,7 +813,7 @@
             },
 
             removeCategory(type, val) {
-                window.ui.confirm('¿Eliminar categoría?', `¿Quieres eliminar "${val}"?`, () => {
+                window.ui.confirm('¿Eliminar categoría?', `¿Eliminar "${val}"?`, () => {
                     window.store[type] = window.store[type].filter(x => x !== val);
                     this.syncMeta(); window.ui.toast('Categoría eliminada', 'delete');
                 });
@@ -822,20 +835,18 @@
                 if (p.rooms.length === 0 && window.store.rooms.length > 0) p.rooms = [window.store.rooms[0]];
                 if (p.types.length === 0 && window.store.types.length > 0) p.types = [window.store.types[0]];
 
-                // Guardado Local Siempre
                 const idx = window.store.products.findIndex(x => x.id === id);
                 if (idx > -1) window.store.products[idx] = p; else window.store.products.unshift(p);
                 saveLocalProducts();
                 window.ui.applyFilters();
                 this.renderAdminView();
 
-                // Intentar Nube
                 if (window.store.isOnline) {
                     try {
                         await setDoc(doc(db, productsPath, id), p);
                         window.ui.toast('Guardado y Sincronizado en la Nube', 'cloud_done');
                     } catch(e) { 
-                        window.ui.toast('Guardado Local (Fallo en la nube)', 'save'); 
+                        window.ui.toast('Guardado Local (Fallo de permisos en la nube)', 'save'); 
                     }
                 } else {
                     window.ui.toast('Guardado Localmente', 'save');
@@ -862,16 +873,14 @@
             },
 
             deleteProduct(id) {
-                window.ui.confirm('¿Eliminar producto?', '¿Borrar este producto del catálogo permanentemente?', async () => {
-                    // Borrado local
+                window.ui.confirm('¿Eliminar producto?', '¿Borrar este producto del catálogo?', async () => {
                     window.store.products = window.store.products.filter(x => x.id !== id);
                     saveLocalProducts();
                     window.ui.applyFilters();
                     this.renderAdminView();
 
-                    // Borrado Nube
                     if (window.store.isOnline) {
-                        try { await deleteDoc(doc(db, productsPath, id)); window.ui.toast('Eliminado por completo', 'delete'); }
+                        try { await deleteDoc(doc(db, productsPath, id)); window.ui.toast('Eliminado de la nube', 'delete'); }
                         catch(e) { window.ui.toast('Eliminado localmente', 'delete'); }
                     } else {
                         window.ui.toast('Eliminado localmente', 'delete');
@@ -879,23 +888,17 @@
                 });
             },
 
-            // Forzar subida de todos los productos locales a la nube
             async forceSyncToCloud() {
-                if (!window.store.isOnline) return window.ui.toast('No estás conectado a la nube', 'error');
-                window.ui.toast('Subiendo catálogo a la nube...', 'sync');
-                
+                if (!window.store.isOnline) return window.ui.toast('No conectado a la nube', 'error');
+                window.ui.toast('Sincronizando con Firebase...', 'sync');
                 try {
-                    // Subir categorías
                     await setDoc(doc(db, metaPath, 'categories'), { rooms: window.store.rooms, types: window.store.types });
-                    
-                    // Subir productos uno a uno
                     for (const p of window.store.products) {
                         await setDoc(doc(db, productsPath, p.id.toString()), p);
                     }
-                    window.ui.toast('¡Sincronización completada con éxito!', 'cloud_done');
+                    window.ui.toast('Catálogo subido con éxito', 'cloud_done');
                 } catch(e) {
-                    window.ui.toast('Error durante la sincronización', 'error');
-                    console.error(e);
+                    window.ui.toast('Error de permisos al subir a Firebase', 'error');
                 }
             },
 
@@ -915,87 +918,70 @@
         };
 
         // ==========================================
-        // INICIO Y CONEXIÓN
+        // ARRANQUE SEGURO DE LA APLICACIÓN
         // ==========================================
         async function bootApp() {
-            // 1. CARGAMOS DATOS LOCALES Y MOSTRAMOS AL INSTANTE (Incluye rescate de versiones previas)
+            // 1. Mostrar productos en milisegundos usando la memoria
             loadLocalData();
             window.ui.init();
 
-            // 2. CONFIGURAMOS FIREBASE (Si hay credenciales)
+            // 2. Determinar configuración de Firebase (Tus claves vs las de Canvas)
             let configToUse = null;
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+            let useCanvasAuth = false;
+
+            if (hasCustomConfig) {
+                configToUse = manualConfig;
+                productsPath = 'products';
+                metaPath = 'meta';
+            } else if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                 configToUse = JSON.parse(__firebase_config);
-            } else {
-                // CONFIGURACIÓN MANUAL PARA GITHUB
-                const manualConfig = {
-                    apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
-  authDomain: "domotical-680de.firebaseapp.com",
-  projectId: "domotical-680de",
-  storageBucket: "domotical-680de.firebasestorage.app",
-  messagingSenderId: "923219132599",
-  appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
-  measurementId: "G-0J6JGDD1BK"
-                };
-                if (manualConfig.apiKey && manualConfig.apiKey !== "" && !manualConfig.apiKey.startsWith("TU_")) {
-                    configToUse = manualConfig;
-                }
+                const aId = typeof __app_id !== 'undefined' ? __app_id : 'domotica-hub';
+                productsPath = `artifacts/${aId}/public/data/products`;
+                metaPath = `artifacts/${aId}/public/data/meta`;
+                useCanvasAuth = true;
             }
 
             if (!configToUse) {
-                showBanner('Modo Local Activo (Base de datos en la nube sin configurar)', '#f59e0b');
+                window.ui.updateStatus('Modo Local (Firebase sin configurar)', false);
                 return;
             }
 
-            // 3. INTENTO DE CONEXIÓN
+            // 3. Conexión segura a Firebase
             try {
                 const appObj = initializeApp(configToUse);
                 auth = getAuth(appObj);
                 db = getFirestore(appObj);
 
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                if (useCanvasAuth && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
-                    await signInAnonymously(auth);
+                    await signInAnonymously(auth); // Usado para tus claves personales
                 }
 
                 window.store.isOnline = true;
-                showBanner('Conectado a la Nube', '#10b981');
-                setTimeout(() => document.getElementById('statusBanner').style.display = 'none', 3000);
-                
+                window.ui.updateStatus('Conectado a la Nube', true);
                 setupCloudSync();
 
             } catch (error) {
-                console.warn("Fallo Firebase. Continuando en local.", error);
-                showBanner('Modo Local Activo (No se pudo conectar a la nube)', '#ea4335');
                 window.store.isOnline = false;
+                window.ui.updateStatus('Modo Local (Error de Autenticación en Firebase)', false);
             }
         }
 
-        function showBanner(msg, color) {
-            const b = document.getElementById('statusBanner');
-            b.textContent = msg; b.style.backgroundColor = color; b.style.display = 'block';
-        }
-
+        // 4. Sincronización Protegida contra Fallos de Reglas
         function setupCloudSync() {
-            // No forzamos reemplazo si la nube está vacía, en su lugar damos la opción de subir
             onSnapshot(collection(db, productsPath), (snapshot) => {
                 if (!snapshot.empty) {
-                    const cloudProducts = [];
-                    snapshot.forEach(doc => cloudProducts.push(doc.data()));
-                    
-                    // Si la nube tiene datos, los usamos y los guardamos localmente como backup
-                    window.store.products = cloudProducts;
-                    saveLocalProducts();
+                    window.store.products = [];
+                    snapshot.forEach(doc => window.store.products.push(doc.data()));
+                    saveLocalProducts(); // Actualizamos el backup local
                     window.ui.applyFilters();
                     if (document.getElementById('adminDashboard').classList.contains('active')) window.admin.renderAdminView();
-                } else {
-                    // La nube está vacía. Mostrar un mensaje sutil en consola.
-                    console.log("Firebase conectado, pero el catálogo está vacío. Usa 'Sincronizar' en el panel Admin para subir tus productos.");
                 }
             }, (error) => {
-                showBanner('Error de permisos en Firebase. Revisa las Reglas.', '#ea4335');
+                // Si faltan permisos en tu consola, salta este error sin romper la web
                 window.store.isOnline = false;
+                window.ui.updateStatus('Modo Local (Acceso denegado por las reglas de Firestore)', false);
             });
 
             onSnapshot(doc(db, metaPath, 'categories'), (docSnap) => {
@@ -1006,7 +992,7 @@
                     saveLocalMeta();
                     window.ui.renderFilterModal();
                 }
-            });
+            }, (error) => {});
         }
 
         window.onload = bootApp;
