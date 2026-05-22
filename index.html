@@ -40,7 +40,6 @@
             overflow-x: hidden;
         }
 
-        /* Fondo Animado Ambient Glow */
         .ambient-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
             background: radial-gradient(circle at 10% 10%, #d3e3fd 0%, transparent 40%),
@@ -48,7 +47,6 @@
             opacity: 0.8;
         }
 
-        /* Utilidad Glassmorphism */
         .glass {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -105,11 +103,11 @@
             display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;
         }
 
-        /* Banner de estado de conexión */
         #statusBanner {
             background: #f59e0b; color: white; text-align: center; padding: 8px;
             font-size: 0.85rem; font-weight: 600; display: none; z-index: 1001; position: relative;
         }
+        #statusBanner.success { background: #10b981; }
 
         /* ========================================================
            CATÁLOGO DE PRODUCTOS (GRID)
@@ -150,7 +148,6 @@
 
         .empty-state { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #666; }
         .empty-state .material-symbols-rounded { font-size: 48px; color: #ccc; margin-bottom: 16px; }
-
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* ========================================================
@@ -229,6 +226,7 @@
         
         .btn-main { width: 100%; padding: 14px; border-radius: var(--radius-pill); border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer; font-size: 1rem; font-family: inherit; transition: 0.3s; margin-top: 8px;}
         .btn-main:hover { background: var(--primary-hover); box-shadow: 0 4px 12px rgba(26,115,232,0.3); }
+        .btn-sync { background: #10b981; } .btn-sync:hover { background: #059669; }
 
         .checkbox-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 120px; overflow-y: auto; padding: 8px; border: 1px solid #eee; border-radius: 12px; background: #fafafa;}
         .checkbox-container label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 400; cursor: pointer; margin: 0;}
@@ -241,7 +239,6 @@
         .btn-list.delete { color: #ea4335; }
         .btn-list:hover { background: rgba(0,0,0,0.05); }
 
-        /* Notificaciones flotantes (Toast) */
         #toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
             background: #202124; color: white; padding: 12px 24px; border-radius: var(--radius-pill);
@@ -259,7 +256,7 @@
 <body>
 
     <div class="ambient-bg"></div>
-    <div id="statusBanner">Modo Local Activo (Base de datos en la nube sin configurar o sin conexión)</div>
+    <div id="statusBanner">Conectando...</div>
 
     <header class="glass">
         <a href="#" class="logo" onclick="ui.resetView()">
@@ -289,13 +286,14 @@
     <main id="productGrid">
         <div class="empty-state">
             <span class="material-symbols-rounded" style="animation: spin 2s linear infinite;">sync</span>
-            <p>Conectando con el catálogo...</p>
+            <p>Cargando tu catálogo...</p>
         </div>
     </main>
 
     <!-- ==========================================
-         MODAL: FILTROS Y ORDEN
+         MODALES UI Y ADMIN
     =========================================== -->
+    <!-- Modal Filtros -->
     <div class="overlay" id="filterModal" onclick="ui.closeModalOnOutsideClick(event, 'filterModal')">
         <div class="modal glass">
             <span class="material-symbols-rounded close-btn" onclick="ui.closeModal('filterModal')">close</span>
@@ -328,9 +326,7 @@
         </div>
     </div>
 
-    <!-- ==========================================
-         DRAWER: CARRITO DE COMPRAS
-    =========================================== -->
+    <!-- Drawer Carrito -->
     <div class="drawer-overlay" id="cartOverlay" onclick="ui.closeCart()"></div>
     <div class="drawer" id="cartDrawer">
         <div class="drawer-header">
@@ -343,9 +339,7 @@
         <div class="drawer-footer" id="cartFooter"></div>
     </div>
 
-    <!-- ==========================================
-         MODAL: LOGIN ADMIN
-    =========================================== -->
+    <!-- Modal Login -->
     <div class="overlay" id="adminLoginModal" onclick="ui.closeModalOnOutsideClick(event, 'adminLoginModal')">
         <div class="modal glass" style="max-width: 350px;">
             <span class="material-symbols-rounded close-btn" onclick="ui.closeModal('adminLoginModal')">close</span>
@@ -357,9 +351,7 @@
         </div>
     </div>
 
-    <!-- ==========================================
-         MODAL: CONFIGURADOR DE CONFIRMACIONES PERSONALIZADAS (Sin alert nativo)
-    =========================================== -->
+    <!-- Modal Confirmación -->
     <div class="overlay" id="confirmModal">
         <div class="modal glass" style="max-width: 400px; text-align: center;">
             <span class="material-symbols-rounded" style="font-size: 48px; color: #ea4335; margin-bottom: 16px;">warning</span>
@@ -367,14 +359,12 @@
             <p id="confirmMessage" style="color: #666; margin-bottom: 24px; font-size: 0.9rem;">Esta acción no se puede deshacer.</p>
             <div style="display: flex; gap: 12px;">
                 <button class="btn-main" style="background: #e0e0e0; color: #333;" onclick="ui.closeConfirm(false)">Cancelar</button>
-                <button class="btn-main" style="background: #ea4335; margin-top: 0;" onclick="ui.closeConfirm(true)">Eliminar</button>
+                <button class="btn-main" style="background: #ea4335; margin-top: 0;" onclick="ui.closeConfirm(true)">Confirmar</button>
             </div>
         </div>
     </div>
 
-    <!-- ==========================================
-         MODAL: PANEL DE ADMINISTRACIÓN
-    =========================================== -->
+    <!-- Modal Admin Dashboard -->
     <div class="overlay" id="adminDashboard" style="overflow-y:auto; padding: 20px 0;">
         <div class="modal glass" style="margin: auto; width: 95%;">
             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -382,8 +372,13 @@
                 <button class="btn-main" style="width: auto; padding: 8px 16px; margin: 0; background: #ea4335;" onclick="ui.closeModal('adminDashboard')">Cerrar Panel</button>
             </div>
 
+            <!-- Botón de Sincronización a Nube -->
+            <button class="btn-main btn-sync" id="btnForceSync" style="margin-bottom: 20px; display: none;" onclick="admin.forceSyncToCloud()">
+                <span class="material-symbols-rounded">cloud_upload</span> Sincronizar Catálogo Local con la Nube
+            </button>
+
             <div class="admin-grid">
-                <!-- Columna Izquierda: Formulario Producto -->
+                <!-- Izquierda: Formulario Producto -->
                 <div class="admin-card">
                     <h3 id="formTitle"><span class="material-symbols-rounded">add_circle</span> Crear Producto</h3>
                     <input type="hidden" id="editId">
@@ -394,7 +389,7 @@
                     </div>
                     <div class="form-group">
                         <label>Descripción corta</label>
-                        <textarea id="pDesc" class="form-control" rows="2" placeholder="Escribe las características principales..."></textarea>
+                        <textarea id="pDesc" class="form-control" rows="2" placeholder="Escribe las características..."></textarea>
                     </div>
                     <div style="display:flex; gap:12px;">
                         <div class="form-group" style="flex: 1;"><label>Precio (€)</label><input type="number" id="pPrice" class="form-control" step="0.01"></div>
@@ -416,9 +411,8 @@
                     <button class="btn-main" id="cancelBtn" style="display:none; background:#888;" onclick="admin.resetForm()">Cancelar Edición</button>
                 </div>
 
-                <!-- Columna Derecha: Categorías y Lista -->
+                <!-- Derecha: Categorías y Lista -->
                 <div style="display: flex; flex-direction: column; gap: 24px;">
-                    <!-- Categorías -->
                     <div class="admin-card">
                         <h3><span class="material-symbols-rounded">category</span> Categorías</h3>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -441,7 +435,6 @@
                         </div>
                     </div>
 
-                    <!-- Lista de Productos -->
                     <div class="admin-card" style="flex:1; display:flex; flex-direction: column;">
                         <h3><span class="material-symbols-rounded">inventory</span> Catálogo Actual</h3>
                         <div id="adminProductList" style="flex: 1; max-height: 300px; overflow-y: auto; padding-right: 8px;"></div>
@@ -451,7 +444,6 @@
         </div>
     </div>
 
-    <!-- Notificaciones flotantes -->
     <div id="toast"></div>
 
     <!-- Firebase SDKs -->
@@ -461,7 +453,7 @@
         import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // ==========================================
-        // ESTADO GLOBAL & ALMACENAMIENTO (Data Manager)
+        // ESTADO GLOBAL & ALMACENAMIENTO LOCAL
         // ==========================================
         window.store = {
             products: [],
@@ -479,44 +471,99 @@
         const productsPath = `artifacts/${appId}/public/data/products`;
         const metaPath = `artifacts/${appId}/public/data/meta`;
 
-        let cloudUnsubscribeProducts = null;
-        let cloudUnsubscribeMeta = null;
+        // ==========================================
+        // SISTEMA DE MIGRACIÓN: RESCATADOR DE DATOS ANTIGUOS
+        // ==========================================
+        function migrateOldData() {
+            // Buscamos todas las variables que se hayan usado en versiones anteriores
+            const legacyKeys = ['domotica_prods', 'sh_products', 'domo_prods', 'dh_prods'];
+            let rescuedProducts = [];
+            let foundOldData = false;
 
-        // Carga inicial inmediata de datos locales como respaldo instantáneo
+            legacyKeys.forEach(key => {
+                const oldDataStr = localStorage.getItem(key);
+                if (oldDataStr) {
+                    try {
+                        const parsedData = JSON.parse(oldDataStr);
+                        rescuedProducts = rescuedProducts.concat(parsedData);
+                        localStorage.removeItem(key); // Limpiamos la vieja key
+                        foundOldData = true;
+                    } catch(e) { console.error("Error leyendo datos antiguos:", e); }
+                }
+            });
+
+            if (foundOldData) {
+                console.log("¡Datos antiguos rescatados!", rescuedProducts);
+                // Convertimos los productos viejos al nuevo formato (rooms / types)
+                const standardizedProducts = rescuedProducts.map(p => {
+                    const desc = p.description || p.desc || '';
+                    const img = p.image || p.img || 'https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=400';
+                    
+                    // Extraer antiguas categorías para meterlas en "Tipos"
+                    let oldCats = [];
+                    if (Array.isArray(p.categories)) oldCats = p.categories;
+                    else if (Array.isArray(p.cats)) oldCats = p.cats;
+                    else if (p.cat) oldCats = [p.cat];
+
+                    return {
+                        id: p.id ? p.id.toString() : Date.now().toString(),
+                        title: p.title || 'Producto Recuperado',
+                        desc: desc,
+                        price: parseFloat(p.price) || 0,
+                        img: img,
+                        rooms: ['General'], // Por defecto
+                        types: oldCats.length > 0 ? oldCats : ['Otros']
+                    };
+                });
+
+                // Los mezclamos con la base de datos actual (para no borrar los nuevos)
+                let currentLocalProds = [];
+                try {
+                    currentLocalProds = JSON.parse(localStorage.getItem(LOCAL_KEYS.PRODS) || '[]');
+                } catch(e) {}
+
+                // Evitar duplicados por título
+                const finalProducts = [...currentLocalProds];
+                standardizedProducts.forEach(sp => {
+                    if (!finalProducts.find(cp => cp.title === sp.title)) {
+                        finalProducts.push(sp);
+                    }
+                });
+
+                // Guardar en la variable moderna
+                localStorage.setItem(LOCAL_KEYS.PRODS, JSON.stringify(finalProducts));
+                window.ui.toast('Productos antiguos recuperados con éxito', 'auto_awesome');
+            }
+        }
+
+        // ==========================================
+        // CARGA LOCAL DE DATOS
+        // ==========================================
         function loadLocalData() {
+            migrateOldData(); // 1. Rescatar datos primero
+
             const lProds = localStorage.getItem(LOCAL_KEYS.PRODS);
             const lMeta = localStorage.getItem(LOCAL_KEYS.META);
             
             if (lProds) {
                 window.store.products = JSON.parse(lProds);
             } else {
+                // Catálogo de muestra solo si está totalmente vacío
                 window.store.products = [
-                    { id: '1', title: 'Cámara 360º Pro', desc: 'Vigilancia total con detección de movimiento.', price: 89.90, img: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400', rooms: ['Exterior', 'Salón'], types: ['Seguridad'] },
-                    { id: '2', title: 'Termostato WiFi Smart', desc: 'Ahorra energía controlando la climatización cómodamente.', price: 129.00, img: 'https://images.unsplash.com/photo-1563453392212-326f5e854473?w=400', rooms: ['Salón', 'Dormitorio'], types: ['Climatización', 'Energía'] },
-                    { id: '3', title: 'Enchufe Inteligente Pro', desc: 'Monitoriza el consumo de tus electrodomésticos en tiempo real.', price: 24.90, img: 'https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=400', rooms: ['Cocina', 'Dormitorio'], types: ['Energía'] }
+                    { id: '1', title: 'Cámara 360º Pro', desc: 'Vigilancia total con detección.', price: 89.90, img: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400', rooms: ['Exterior', 'Salón'], types: ['Seguridad'] }
                 ];
-                localStorage.setItem(LOCAL_KEYS.PRODS, JSON.stringify(window.store.products));
+                saveLocalProducts();
             }
             
             if (lMeta) {
                 const meta = JSON.parse(lMeta);
                 window.store.rooms = meta.rooms || window.store.rooms;
                 window.store.types = meta.types || window.store.types;
-            } else {
-                saveLocalMeta();
             }
         }
 
-        function saveLocalProducts() {
-            localStorage.setItem(LOCAL_KEYS.PRODS, JSON.stringify(window.store.products));
-        }
-
-        function saveLocalMeta() {
-            localStorage.setItem(LOCAL_KEYS.META, JSON.stringify({
-                rooms: window.store.rooms,
-                types: window.store.types
-            }));
-        }
+        function saveLocalProducts() { localStorage.setItem(LOCAL_KEYS.PRODS, JSON.stringify(window.store.products)); }
+        function saveLocalMeta() { localStorage.setItem(LOCAL_KEYS.META, JSON.stringify({ rooms: window.store.rooms, types: window.store.types })); }
 
         // ==========================================
         // UI CONTROLLER
@@ -527,27 +574,19 @@
             init() {
                 const c = localStorage.getItem(LOCAL_KEYS.CART);
                 if (c) window.store.cart = JSON.parse(c);
-                
                 this.updateCartUI();
                 this.renderFilterModal();
                 this.applyFilters();
             },
 
-            resetView() {
-                document.getElementById('searchInput').value = '';
-                this.clearFilters();
-            },
-
-            // --- Control de Modales ---
+            resetView() { document.getElementById('searchInput').value = ''; this.clearFilters(); },
             openModal(id) { document.getElementById(id).classList.add('active'); if(id==='filterModal') this.renderFilterModal(); },
             closeModal(id) { document.getElementById(id).classList.remove('active'); },
             closeModalOnOutsideClick(e, id) { if(e.target.id === id) this.closeModal(id); },
-            
             openCart() { document.getElementById('cartOverlay').classList.add('active'); document.getElementById('cartDrawer').classList.add('active'); },
             closeCart() { document.getElementById('cartOverlay').classList.remove('active'); document.getElementById('cartDrawer').classList.remove('active'); },
             openAdminLogin() { this.openModal('adminLoginModal'); document.getElementById('adminPass').value = ''; },
 
-            // --- Diálogos de Confirmación Interactivos ---
             confirm(title, msg, onConfirm) {
                 document.getElementById('confirmTitle').textContent = title;
                 document.getElementById('confirmMessage').textContent = msg;
@@ -557,46 +596,37 @@
 
             closeConfirm(approved) {
                 this.closeModal('confirmModal');
-                if (approved && this.confirmCallback) {
-                    this.confirmCallback();
-                }
+                if (approved && this.confirmCallback) this.confirmCallback();
                 this.confirmCallback = null;
             },
 
-            // --- Filtros y Renderizado de Productos ---
             toggleFilter(type, value) {
                 const arr = window.store.filters[type];
                 const index = arr.indexOf(value);
                 if (index > -1) arr.splice(index, 1); else arr.push(value);
-                this.renderFilterModal();
-                this.applyFilters();
+                this.renderFilterModal(); this.applyFilters();
             },
 
             clearFilters() {
                 window.store.filters = { query: window.store.filters.query, rooms: [], types: [], sort: 'default' };
                 document.getElementById('sortSelect').value = 'default';
-                this.renderFilterModal();
-                this.applyFilters();
+                this.renderFilterModal(); this.applyFilters();
             },
 
             applyFilters() {
                 window.store.filters.query = document.getElementById('searchInput').value.toLowerCase();
                 const f = window.store.filters;
-
-                // Actualizar UI del botón Filtros
                 const btn = document.getElementById('btnFilter');
-                const textSpan = btn.querySelector('.filter-text');
                 const activeCount = f.rooms.length + f.types.length;
                 
                 if(activeCount > 0 || f.sort !== 'default'){
                     btn.classList.add('active');
-                    textSpan.textContent = `Filtros (${activeCount})`;
+                    btn.querySelector('.filter-text').textContent = `Filtros (${activeCount})`;
                 } else {
                     btn.classList.remove('active');
-                    textSpan.textContent = `Filtros`;
+                    btn.querySelector('.filter-text').textContent = `Filtros`;
                 }
 
-                // Lógica de filtrado
                 let result = window.store.products.filter(p => {
                     const matchQ = p.title.toLowerCase().includes(f.query) || p.desc.toLowerCase().includes(f.query);
                     const matchR = f.rooms.length === 0 || (p.rooms && f.rooms.some(r => p.rooms.includes(r)));
@@ -604,7 +634,6 @@
                     return matchQ && matchR && matchT;
                 });
 
-                // Lógica de ordenación
                 if (f.sort === 'price_asc') result.sort((a,b) => a.price - b.price);
                 if (f.sort === 'price_desc') result.sort((a,b) => b.price - a.price);
                 if (f.sort === 'name_asc') result.sort((a,b) => a.title.localeCompare(b.title));
@@ -615,10 +644,9 @@
             drawProducts(products) {
                 const grid = document.getElementById('productGrid');
                 if (products.length === 0) {
-                    grid.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">search_off</span><p>No se encontraron productos que coincidan.</p></div>';
+                    grid.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">search_off</span><p>No se encontraron productos.</p></div>';
                     return;
                 }
-
                 grid.innerHTML = products.map(p => {
                     const rTags = (p.rooms || []).map(r => `<span class="tag tag-room">${r}</span>`).join('');
                     const tTags = (p.types || []).map(t => `<span class="tag tag-type">${t}</span>`).join('');
@@ -641,18 +669,15 @@
             },
 
             renderFilterModal() {
-                const drawChips = (containerId, items, selectedArray, type) => {
-                    const container = document.getElementById(containerId);
-                    container.innerHTML = items.map(item => `
-                        <div class="filter-chip ${selectedArray.includes(item) ? 'selected' : ''}" 
-                             onclick="ui.toggleFilter('${type}', '${item}')">${item}</div>
+                const drawChips = (containerId, items, selArr, type) => {
+                    document.getElementById(containerId).innerHTML = items.map(item => `
+                        <div class="filter-chip ${selArr.includes(item) ? 'selected' : ''}" onclick="ui.toggleFilter('${type}', '${item}')">${item}</div>
                     `).join('');
                 };
                 drawChips('filterRooms', window.store.rooms, window.store.filters.rooms, 'rooms');
                 drawChips('filterTypes', window.store.types, window.store.filters.types, 'types');
             },
 
-            // --- Carrito ---
             addToCart(id) {
                 const p = window.store.products.find(x => x.id === id);
                 if (!p) return;
@@ -664,18 +689,13 @@
             },
             
             updateCartUI() {
-                const badge = document.getElementById('cartBadge');
-                badge.textContent = window.store.cart.reduce((a, b) => a + b.qty, 0);
-                
+                document.getElementById('cartBadge').textContent = window.store.cart.reduce((a, b) => a + b.qty, 0);
                 const container = document.getElementById('cartContent');
                 const footer = document.getElementById('cartFooter');
-                
                 if (window.store.cart.length === 0) {
                     container.innerHTML = '<div class="empty-state" style="padding: 40px 0;"><span class="material-symbols-rounded">shopping_basket</span><p>Tu cesta está vacía</p></div>';
-                    footer.innerHTML = '';
-                    return;
+                    footer.innerHTML = ''; return;
                 }
-
                 container.innerHTML = window.store.cart.map(i => `
                     <div class="cart-item">
                         <img src="${i.img}" onerror="this.src='https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=200'">
@@ -684,29 +704,23 @@
                             <div class="cart-price">${i.price.toFixed(2)}€ x unidad</div>
                             <div class="qty-controls">
                                 <button onclick="ui.changeQty('${i.id}', -1)"><span class="material-symbols-rounded" style="font-size:18px;">remove</span></button>
-                                <span style="font-size: 0.95rem; min-width: 12px; text-align: center;">${i.qty}</span>
+                                <span>${i.qty}</span>
                                 <button onclick="ui.changeQty('${i.id}', 1)"><span class="material-symbols-rounded" style="font-size:18px;">add</span></button>
                             </div>
                         </div>
-                    </div>
-                `).join('');
-                
+                    </div>`).join('');
                 const total = window.store.cart.reduce((a, b) => a + (b.price * b.qty), 0);
                 footer.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
                         <span style="font-size: 1.1rem; color: #666;">Total estimado</span>
                         <span style="font-size: 1.4rem; font-weight: 700; color: var(--on-surface);">${total.toFixed(2)}€</span>
                     </div>
-                    <button class="btn-main" style="width: 100%; margin: 0; padding: 16px; font-size: 1.1rem;" onclick="ui.checkout()">
-                        Tramitar Pedido Seguro
-                    </button>
-                `;
+                    <button class="btn-main" style="width: 100%; padding: 16px;" onclick="ui.checkout()">Tramitar Pedido Seguro</button>`;
             },
             
             changeQty(id, d) {
                 const i = window.store.cart.find(x => x.id === id);
-                if (!i) return;
-                i.qty += d;
+                if (!i) return; i.qty += d;
                 if (i.qty <= 0) window.store.cart = window.store.cart.filter(x => x.id !== id);
                 localStorage.setItem(LOCAL_KEYS.CART, JSON.stringify(window.store.cart));
                 this.updateCartUI();
@@ -715,10 +729,8 @@
             checkout() {
                 if (window.store.cart.length === 0) return;
                 this.toast('¡Pedido procesado de forma simulada!', 'local_shipping');
-                window.store.cart = [];
-                localStorage.setItem(LOCAL_KEYS.CART, JSON.stringify([]));
-                this.updateCartUI();
-                this.closeCart();
+                window.store.cart = []; localStorage.setItem(LOCAL_KEYS.CART, JSON.stringify([]));
+                this.updateCartUI(); this.closeCart();
             },
 
             toast(m, icon = 'info') {
@@ -730,7 +742,7 @@
         };
 
         // ==========================================
-        // ADMINISTRACIÓN (Controlador Lógico)
+        // ADMINISTRACIÓN (Lógica Admin)
         // ==========================================
         window.admin = {
             login() {
@@ -743,73 +755,55 @@
             },
 
             renderAdminView() {
-                // Generar Checkboxes
                 const genCb = (items, cls) => items.map(i => `<label><input type="checkbox" value="${i}" class="${cls}"> ${i}</label>`).join('');
                 document.getElementById('checkboxRooms').innerHTML = genCb(window.store.rooms, 'cb-room');
                 document.getElementById('checkboxTypes').innerHTML = genCb(window.store.types, 'cb-type');
 
-                // Generar Listas Categorías
                 const genLi = (items, type) => items.map(i => `
-                    <li class="list-item">
-                        ${i} <button class="btn-list delete" onclick="admin.removeCategory('${type}', '${i}')"><span class="material-symbols-rounded" style="font-size:18px;">delete</span></button>
-                    </li>`).join('');
+                    <li class="list-item">${i} <button class="btn-list delete" onclick="admin.removeCategory('${type}', '${i}')"><span class="material-symbols-rounded" style="font-size:18px;">delete</span></button></li>
+                `).join('');
                 document.getElementById('adminRoomList').innerHTML = genLi(window.store.rooms, 'rooms');
                 document.getElementById('adminTypeList').innerHTML = genLi(window.store.types, 'types');
 
-                // Generar Lista Productos
                 document.getElementById('adminProductList').innerHTML = window.store.products.map(p => `
                     <div class="list-item" style="padding: 8px;">
                         <div style="display:flex; align-items:center; gap:12px;">
                             <img src="${p.img}" width="40" height="40" style="border-radius:8px; object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=200'">
-                            <div>
-                                <div style="font-weight:600; font-size:0.9rem; line-height:1.2;">${p.title}</div>
-                                <div style="font-size:0.8rem; color:#666;">${p.price.toFixed(2)}€</div>
-                            </div>
+                            <div><div style="font-weight:600; font-size:0.9rem;">${p.title}</div><div style="font-size:0.8rem; color:#666;">${p.price.toFixed(2)}€</div></div>
                         </div>
                         <div class="list-actions">
                             <button class="btn-list edit" onclick="admin.editProduct('${p.id}')"><span class="material-symbols-rounded">edit</span></button>
                             <button class="btn-list delete" onclick="admin.deleteProduct('${p.id}')"><span class="material-symbols-rounded">delete</span></button>
                         </div>
-                    </div>
-                `).join('');
+                    </div>`).join('');
+                
+                // Mostrar botón de forzar sincronización si estamos online pero operando en modo mixto
+                if (window.store.isOnline) {
+                    document.getElementById('btnForceSync').style.display = 'flex';
+                }
             },
 
             async syncMeta() {
-                const metaData = { rooms: window.store.rooms, types: window.store.types };
+                saveLocalMeta(); // Siempre guardamos local por seguridad
                 if (window.store.isOnline) {
-                    try { 
-                        await setDoc(doc(db, metaPath, 'categories'), metaData); 
-                    } catch(e) { 
-                        console.error("Fallo al guardar categorías en la nube:", e); 
-                        window.ui.toast('Error al guardar categoría en la nube', 'error');
-                    }
-                } else {
-                    localStorage.setItem(LOCAL_KEYS.META, JSON.stringify(metaData));
+                    try { await setDoc(doc(db, metaPath, 'categories'), { rooms: window.store.rooms, types: window.store.types }); } catch(e) {}
                 }
-                window.ui.renderFilterModal();
-                this.renderAdminView();
+                window.ui.renderFilterModal(); this.renderAdminView();
             },
 
             addCategory(type, inputId) {
                 const val = document.getElementById(inputId).value.trim();
                 if (val && !window.store[type].includes(val)) {
-                    window.store[type].push(val);
-                    document.getElementById(inputId).value = '';
-                    this.syncMeta();
-                    window.ui.toast(`Categoría añadida`, 'check');
+                    window.store[type].push(val); document.getElementById(inputId).value = '';
+                    this.syncMeta(); window.ui.toast(`Categoría añadida`, 'check');
                 }
             },
 
             removeCategory(type, val) {
-                window.ui.confirm(
-                    '¿Eliminar categoría?',
-                    `¿Quieres eliminar "${val}"? Los productos vinculados perderán esta etiqueta.`,
-                    () => {
-                        window.store[type] = window.store[type].filter(x => x !== val);
-                        this.syncMeta();
-                        window.ui.toast('Categoría eliminada', 'delete');
-                    }
-                );
+                window.ui.confirm('¿Eliminar categoría?', `¿Quieres eliminar "${val}"?`, () => {
+                    window.store[type] = window.store[type].filter(x => x !== val);
+                    this.syncMeta(); window.ui.toast('Categoría eliminada', 'delete');
+                });
             },
 
             async saveProduct() {
@@ -828,22 +822,23 @@
                 if (p.rooms.length === 0 && window.store.rooms.length > 0) p.rooms = [window.store.rooms[0]];
                 if (p.types.length === 0 && window.store.types.length > 0) p.types = [window.store.types[0]];
 
+                // Guardado Local Siempre
+                const idx = window.store.products.findIndex(x => x.id === id);
+                if (idx > -1) window.store.products[idx] = p; else window.store.products.unshift(p);
+                saveLocalProducts();
+                window.ui.applyFilters();
+                this.renderAdminView();
+
+                // Intentar Nube
                 if (window.store.isOnline) {
                     try {
                         await setDoc(doc(db, productsPath, id), p);
-                        window.ui.toast('Sincronizado en la Nube', 'cloud_done');
+                        window.ui.toast('Guardado y Sincronizado en la Nube', 'cloud_done');
                     } catch(e) { 
-                        console.error("Firestore save error:", e);
-                        window.ui.toast('Fallo al guardar en la nube. Cambiando temporalmente a local.', 'warning');
-                        this.fallbackToLocalMode();
+                        window.ui.toast('Guardado Local (Fallo en la nube)', 'save'); 
                     }
                 } else {
-                    const idx = window.store.products.findIndex(x => x.id === id);
-                    if (idx > -1) window.store.products[idx] = p; else window.store.products.unshift(p);
-                    saveLocalProducts();
-                    window.ui.applyFilters();
-                    this.renderAdminView();
-                    window.ui.toast('Guardado en memoria local', 'save');
+                    window.ui.toast('Guardado Localmente', 'save');
                 }
                 this.resetForm();
             },
@@ -861,48 +856,47 @@
                 document.querySelectorAll('.cb-type').forEach(cb => cb.checked = p.types && p.types.includes(cb.value));
 
                 document.getElementById('formTitle').innerHTML = '<span class="material-symbols-rounded">edit</span> Editar Producto';
-                document.getElementById('saveBtn').textContent = window.store.isOnline ? 'Actualizar en la Nube' : 'Actualizar Localmente';
+                document.getElementById('saveBtn').textContent = 'Actualizar Producto';
                 document.getElementById('cancelBtn').style.display = 'block';
                 document.querySelector('#adminDashboard .modal').scrollTo({top: 0, behavior: 'smooth'});
             },
 
             deleteProduct(id) {
-                window.ui.confirm(
-                    '¿Eliminar producto?',
-                    '¿Estás seguro de que quieres borrar este producto del catálogo permanentemente?',
-                    async () => {
-                        if (window.store.isOnline) {
-                            try { 
-                                await deleteDoc(doc(db, productsPath, id)); 
-                                window.ui.toast('Eliminado de la nube', 'delete'); 
-                            } catch(e) { 
-                                console.error(e); 
-                                window.ui.toast('Fallo de permisos en la nube al eliminar', 'error');
-                            }
-                        } else {
-                            window.store.products = window.store.products.filter(x => x.id !== id);
-                            saveLocalProducts();
-                            window.ui.applyFilters();
-                            this.renderAdminView();
-                            window.ui.toast('Eliminado localmente', 'delete');
-                        }
+                window.ui.confirm('¿Eliminar producto?', '¿Borrar este producto del catálogo permanentemente?', async () => {
+                    // Borrado local
+                    window.store.products = window.store.products.filter(x => x.id !== id);
+                    saveLocalProducts();
+                    window.ui.applyFilters();
+                    this.renderAdminView();
+
+                    // Borrado Nube
+                    if (window.store.isOnline) {
+                        try { await deleteDoc(doc(db, productsPath, id)); window.ui.toast('Eliminado por completo', 'delete'); }
+                        catch(e) { window.ui.toast('Eliminado localmente', 'delete'); }
+                    } else {
+                        window.ui.toast('Eliminado localmente', 'delete');
                     }
-                );
+                });
             },
 
-            fallbackToLocalMode() {
-                // Función para pasar al modo local dinámicamente si hay errores sobre la marcha
-                window.store.isOnline = false;
-                document.getElementById('statusBanner').style.display = 'block';
-                document.getElementById('statusBanner').textContent = 'Modo Local Activo (Se perdieron los permisos o la conexión)';
+            // Forzar subida de todos los productos locales a la nube
+            async forceSyncToCloud() {
+                if (!window.store.isOnline) return window.ui.toast('No estás conectado a la nube', 'error');
+                window.ui.toast('Subiendo catálogo a la nube...', 'sync');
                 
-                // Limpiar listeners si estaban activos
-                if (cloudUnsubscribeProducts) { try { cloudUnsubscribeProducts(); } catch(e) {} }
-                if (cloudUnsubscribeMeta) { try { cloudUnsubscribeMeta(); } catch(e) {} }
-                
-                loadLocalData();
-                window.ui.applyFilters();
-                if (document.getElementById('adminDashboard').classList.contains('active')) this.renderAdminView();
+                try {
+                    // Subir categorías
+                    await setDoc(doc(db, metaPath, 'categories'), { rooms: window.store.rooms, types: window.store.types });
+                    
+                    // Subir productos uno a uno
+                    for (const p of window.store.products) {
+                        await setDoc(doc(db, productsPath, p.id.toString()), p);
+                    }
+                    window.ui.toast('¡Sincronización completada con éxito!', 'cloud_done');
+                } catch(e) {
+                    window.ui.toast('Error durante la sincronización', 'error');
+                    console.error(e);
+                }
             },
 
             resetForm() {
@@ -921,106 +915,100 @@
         };
 
         // ==========================================
-        // INICIO DE APLICACIÓN Y CONEXIÓN A NUBE
+        // INICIO Y CONEXIÓN
         // ==========================================
         async function bootApp() {
-            // 1. Cargar datos locales de forma inmediata para asegurar renderizado instantáneo
+            // 1. CARGAMOS DATOS LOCALES Y MOSTRAMOS AL INSTANTE (Incluye rescate de versiones previas)
             loadLocalData();
             window.ui.init();
 
-            // 2. Comprobar si las credenciales de Firebase son reales y no los textos por defecto
+            // 2. CONFIGURAMOS FIREBASE (Si hay credenciales)
             let configToUse = null;
             if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                 configToUse = JSON.parse(__firebase_config);
             } else {
-                // Credenciales manuales que introduces tú en GitHub
+                // CONFIGURACIÓN MANUAL PARA GITHUB
                 const manualConfig = {
-  apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
+                    apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
   authDomain: "domotical-680de.firebaseapp.com",
   projectId: "domotical-680de",
   storageBucket: "domotical-680de.firebasestorage.app",
   messagingSenderId: "923219132599",
   appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
   measurementId: "G-0J6JGDD1BK"
-};
-                // Validación para evitar bloquear la web si no se han rellenado las credenciales reales
-                const isValid = manualConfig.apiKey && 
-                                manualConfig.apiKey !== "" && 
-                                !manualConfig.apiKey.startsWith("TU_") &&
-                                manualConfig.projectId && 
-                                !manualConfig.projectId.startsWith("TU_");
-                
-                if (isValid) configToUse = manualConfig;
+                };
+                if (manualConfig.apiKey && manualConfig.apiKey !== "" && !manualConfig.apiKey.startsWith("TU_")) {
+                    configToUse = manualConfig;
+                }
             }
 
             if (!configToUse) {
-                // Sin configurar: Modo Local silencioso y limpio
-                document.getElementById('statusBanner').style.display = 'block';
+                showBanner('Modo Local Activo (Base de datos en la nube sin configurar)', '#f59e0b');
                 return;
             }
 
-            // 3. Conexión asíncrona segura con Firebase
+            // 3. INTENTO DE CONEXIÓN
             try {
                 const appObj = initializeApp(configToUse);
                 auth = getAuth(appObj);
                 db = getFirestore(appObj);
 
-                // Autenticación con límite de tiempo (Timeout) para evitar congelamientos si no hay red
-                const authPromise = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token)
-                    ? signInWithCustomToken(auth, __initial_auth_token)
-                    : signInAnonymously(auth);
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
 
-                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Tiempo de espera agotado")), 4500));
-                
-                await Promise.race([authPromise, timeoutPromise]);
-
-                // Éxito en Autenticación: Escuchar cambios en la nube con capturas de errores
                 window.store.isOnline = true;
-                document.getElementById('statusBanner').style.display = 'none';
+                showBanner('Conectado a la Nube', '#10b981');
+                setTimeout(() => document.getElementById('statusBanner').style.display = 'none', 3000);
+                
                 setupCloudSync();
 
             } catch (error) {
-                console.warn("Fallo de conexión o de credenciales. Usando modo local offline.", error);
-                document.getElementById('statusBanner').style.display = 'block';
-                document.getElementById('statusBanner').textContent = 'Modo Local Activo (No se pudo verificar la conexión en la nube)';
+                console.warn("Fallo Firebase. Continuando en local.", error);
+                showBanner('Modo Local Activo (No se pudo conectar a la nube)', '#ea4335');
                 window.store.isOnline = false;
-                // Forzar render de respaldo inmediato
-                window.ui.applyFilters();
             }
         }
 
-        // 4. Sincronización robusta en tiempo real con manejador de errores de permisos
+        function showBanner(msg, color) {
+            const b = document.getElementById('statusBanner');
+            b.textContent = msg; b.style.backgroundColor = color; b.style.display = 'block';
+        }
+
         function setupCloudSync() {
-            // Sincronizar Categorías en la Nube
-            cloudUnsubscribeMeta = onSnapshot(doc(db, metaPath, 'categories'), (docSnap) => {
+            // No forzamos reemplazo si la nube está vacía, en su lugar damos la opción de subir
+            onSnapshot(collection(db, productsPath), (snapshot) => {
+                if (!snapshot.empty) {
+                    const cloudProducts = [];
+                    snapshot.forEach(doc => cloudProducts.push(doc.data()));
+                    
+                    // Si la nube tiene datos, los usamos y los guardamos localmente como backup
+                    window.store.products = cloudProducts;
+                    saveLocalProducts();
+                    window.ui.applyFilters();
+                    if (document.getElementById('adminDashboard').classList.contains('active')) window.admin.renderAdminView();
+                } else {
+                    // La nube está vacía. Mostrar un mensaje sutil en consola.
+                    console.log("Firebase conectado, pero el catálogo está vacío. Usa 'Sincronizar' en el panel Admin para subir tus productos.");
+                }
+            }, (error) => {
+                showBanner('Error de permisos en Firebase. Revisa las Reglas.', '#ea4335');
+                window.store.isOnline = false;
+            });
+
+            onSnapshot(doc(db, metaPath, 'categories'), (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     window.store.rooms = data.rooms || window.store.rooms;
                     window.store.types = data.types || window.store.types;
+                    saveLocalMeta();
                     window.ui.renderFilterModal();
-                    if (document.getElementById('adminDashboard').classList.contains('active')) window.admin.renderAdminView();
-                } else {
-                    window.admin.syncMeta(); 
                 }
-            }, (error) => {
-                console.warn("Error de lectura en metadatos de Firestore (posibles reglas incorrectas):", error);
-                // Si la base de datos bloquea el acceso por reglas, pasamos a modo local
-                window.admin.fallbackToLocalMode();
-            });
-
-            // Sincronizar Productos en la Nube
-            cloudUnsubscribeProducts = onSnapshot(collection(db, productsPath), (snapshot) => {
-                window.store.products = [];
-                snapshot.forEach(doc => window.store.products.push(doc.data()));
-                window.ui.applyFilters(); 
-                if (document.getElementById('adminDashboard').classList.contains('active')) window.admin.renderAdminView();
-            }, (error) => {
-                console.warn("Error de lectura en colección de productos de Firestore (posibles reglas incorrectas):", error);
-                window.admin.fallbackToLocalMode();
             });
         }
 
-        // Arrancar aplicación
         window.onload = bootApp;
     </script>
 </body>
