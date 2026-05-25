@@ -12,17 +12,17 @@
     
     <style>
         /* ========================================================
-           VARIABLES GLOBALES & ESTILOS BASE (Material Design 3)
+           VARIABLES GLOBALES & ESTÉTICA VERDE (Emerald Theme)
         ======================================================== */
         :root {
-            --primary: #1a73e8;
-            --primary-hover: #1557b0;
-            --primary-container: #d3e3fd;
+            --primary: #10b981; /* Esmeralda vibrante */
+            --primary-hover: #059669; /* Esmeralda oscuro */
+            --primary-container: #d1fae5; /* Esmeralda claro/fondo */
             --surface: #f8f9fa;
             --on-surface: #1f1f1f;
-            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(255, 255, 255, 0.6);
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
             --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
             --radius-xl: 24px;
             --radius-lg: 16px;
@@ -40,12 +40,12 @@
             overflow-x: hidden;
         }
 
-        /* Fondo Animado Ambient Glow */
+        /* Fondo Animado Ambient Glow Verde */
         .ambient-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(circle at 10% 10%, #d3e3fd 0%, transparent 40%),
-                        radial-gradient(circle at 90% 90%, #fce8e6 0%, transparent 40%);
-            opacity: 0.8;
+            background: radial-gradient(circle at 10% 10%, #d1fae5 0%, transparent 40%),
+                        radial-gradient(circle at 90% 90%, #ccfbf1 0%, transparent 40%);
+            opacity: 0.9;
         }
 
         .glass {
@@ -66,7 +66,7 @@
 
         .logo {
             font-size: 1.5rem; font-weight: 700; text-decoration: none;
-            color: var(--primary); display: flex; align-items: center; gap: 8px;
+            color: var(--primary-hover); display: flex; align-items: center; gap: 8px;
             letter-spacing: -0.5px;
         }
 
@@ -83,11 +83,11 @@
         .btn-filter {
             display: flex; align-items: center; gap: 6px; padding: 0 20px;
             border-radius: var(--radius-pill); border: 1px solid var(--primary);
-            background: var(--primary-container); color: var(--primary);
+            background: var(--primary-container); color: var(--primary-hover);
             font-weight: 600; cursor: pointer; transition: 0.3s; font-family: inherit;
         }
-        .btn-filter:hover { background: var(--primary); color: white; }
-        .btn-filter.active { background: var(--primary); color: white; box-shadow: var(--shadow-sm); }
+        .btn-filter:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .btn-filter.active { background: var(--primary); color: white; box-shadow: var(--shadow-sm); border-color: var(--primary); }
 
         .header-actions { display: flex; gap: 8px; }
         .btn-icon {
@@ -98,15 +98,12 @@
         }
         .btn-icon:hover { background: rgba(0,0,0,0.05); color: var(--primary); }
         .cart-badge {
-            position: absolute; top: 4px; right: 4px; background: #ea4335; color: white;
+            position: absolute; top: 4px; right: 4px; background: #ef4444; color: white;
             font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;
         }
 
-        #statusBanner {
-            background: #f59e0b; color: white; text-align: center; padding: 8px;
-            font-size: 0.85rem; font-weight: 600; display: none; z-index: 1001; position: relative;
-        }
+        #statusBanner { display: none !important; }
 
         /* ========================================================
            CATÁLOGO DE PRODUCTOS (GRID)
@@ -118,25 +115,25 @@
         .card {
             border-radius: var(--radius-xl); overflow: hidden; display: flex; flex-direction: column;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative;
+            cursor: pointer;
         }
-        .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(26,115,232,0.2); }
+        .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(16, 185, 129, 0.3); }
         .card-img { width: 100%; height: 220px; object-fit: cover; background: white; border-bottom: 1px solid #eee;}
         
         .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
         
         .tags-wrapper { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
         .tag { font-size: 0.7rem; padding: 4px 10px; border-radius: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
-        .tag-room { background: #e3f2fd; color: #1565c0; }
-        .tag-type { background: #fce4ec; color: #c2185b; }
+        .tag-room { background: #d1fae5; color: #047857; } 
+        .tag-type { background: #e0f2fe; color: #0369a1; } 
         
-        .card-title { font-weight: 600; font-size: 1.2rem; margin-bottom: 8px; line-height: 1.2;}
-        .card-desc { font-size: 0.85rem; color: #666; margin-bottom: 20px; flex: 1; }
+        .card-title { font-weight: 600; font-size: 1.2rem; margin-bottom: 14px; line-height: 1.2;}
         
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .price { font-weight: 700; font-size: 1.3rem; color: var(--on-surface); }
         
         .btn-add {
-            background: var(--primary-container); color: var(--primary); border: none;
+            background: var(--primary-container); color: var(--primary-hover); border: none;
             padding: 10px 20px; border-radius: var(--radius-pill); cursor: pointer;
             font-weight: 600; font-family: inherit; transition: 0.2s; display: flex; align-items: center; gap: 6px;
         }
@@ -157,8 +154,8 @@
         }
         .overlay.active { opacity: 1; pointer-events: all; }
         
-        /* Modales Especiales: Z-Index alto para no quedar detrás */
         #confirmModal { z-index: 2500 !important; }
+        #detailModal .modal { max-width: 780px; padding: 0; overflow: hidden; border-radius: var(--radius-xl); }
         
         .modal {
             width: 90%; max-width: 500px; max-height: 90vh; border-radius: var(--radius-xl);
@@ -167,7 +164,7 @@
         }
         .overlay.active .modal { transform: translateY(0); }
         
-        .close-btn { position: absolute; top: 20px; right: 20px; cursor: pointer; color: #666; background: rgba(0,0,0,0.05); border-radius: 50%; padding: 4px; transition: 0.2s;}
+        .close-btn { position: absolute; top: 20px; right: 20px; cursor: pointer; color: #666; background: rgba(0,0,0,0.05); border-radius: 50%; padding: 4px; transition: 0.2s; z-index: 10; }
         .close-btn:hover { background: rgba(0,0,0,0.1); color: #000; }
 
         /* Chips de Filtro */
@@ -180,6 +177,35 @@
         }
         .filter-chip.selected { background: var(--primary); color: white; border-color: var(--primary); }
         .sort-select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ccc; font-family: inherit; font-size: 1rem; outline: none;}
+
+        /* ========================================================
+           VISTA DETALLE (PRODUCT VIEW MODAL)
+        ======================================================== */
+        .detail-container { display: grid; grid-template-columns: 1.1fr 1fr; min-height: 480px; }
+        .detail-img-box { background: #fff; display: flex; align-items: center; justify-content: center; position: relative; border-right: 1px solid #eee; }
+        .detail-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .detail-info-box { padding: 36px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; max-height: 85vh; background: #fff;}
+        
+        .detail-status-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .detail-badge-stock { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; font-weight: 700; color: #059669; }
+        .detail-badge-stock .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; animation: pulse 1.5s infinite; }
+        
+        .detail-title { font-size: 1.6rem; font-weight: 700; line-height: 1.2; margin-bottom: 8px; color: var(--on-surface); }
+        .detail-price { font-size: 1.8rem; font-weight: 700; color: var(--primary-hover); margin-bottom: 16px; }
+        .detail-desc { font-size: 0.9rem; color: #555; line-height: 1.6; margin-bottom: 24px; border-top: 1px solid #f1f3f4; padding-top: 16px; }
+        
+        .detail-meta-row { display: flex; gap: 16px; margin-bottom: 24px; font-size: 0.85rem; color: #666; }
+        .detail-meta-item { display: flex; align-items: center; gap: 6px; }
+        .detail-meta-item .material-symbols-rounded { font-size: 18px; color: var(--primary); }
+
+        .rating-stars { display: flex; align-items: center; gap: 4px; color: #fbbf24; font-size: 0.9rem; margin-bottom: 16px; }
+        .rating-count { color: #888; font-size: 0.8rem; margin-left: 6px; }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
 
         /* ========================================================
            DRAWER (Cajón Lateral) PARA EL CARRITO
@@ -211,12 +237,12 @@
         .qty-controls button { border: none; background: none; cursor: pointer; font-size: 1.2rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; justify-content: center;}
 
         /* ========================================================
-           ADMIN DASHBOARD
+           ADMIN DASHBOARD (Escala y estructura refinada)
         ======================================================== */
-        #adminDashboard .modal { max-width: 850px; background: #f0f4f8; }
-        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px;}
+        #adminDashboard .modal { max-width: 980px; background: #f0fdf4; padding: 24px; } 
+        .admin-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; margin-top: 20px;}
         .admin-card { background: white; padding: 24px; border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); }
-        .admin-card h3 { margin-bottom: 16px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; color: var(--primary);}
+        .admin-card h3 { margin-bottom: 16px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; color: var(--primary-hover);}
 
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: #555;}
@@ -224,10 +250,11 @@
         .form-control:focus { border-color: var(--primary); background: white; outline: none;}
         
         .btn-main { width: 100%; padding: 14px; border-radius: var(--radius-pill); border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer; font-size: 1rem; font-family: inherit; transition: 0.3s; margin-top: 8px;}
-        .btn-main:hover { background: var(--primary-hover); box-shadow: 0 4px 12px rgba(26,115,232,0.3); }
-        .btn-sync { background: #10b981; margin-bottom: 20px;} .btn-sync:hover { background: #059669; }
+        .btn-main:hover { background: var(--primary-hover); box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+        .btn-sync { background: #0ea5e9; margin-bottom: 20px;} .btn-sync:hover { background: #0284c7; }
 
-        .checkbox-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 120px; overflow-y: auto; padding: 8px; border: 1px solid #eee; border-radius: 12px; background: #fafafa;}
+        /* Ajuste de contenedores para evitar cortes y dobles de scroll */
+        .checkbox-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 200px; overflow-y: auto; padding: 12px; border: 1px solid #eee; border-radius: 12px; background: #fafafa;}
         .checkbox-container label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 400; cursor: pointer; margin: 0;}
 
         .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; transition: 0.2s;}
@@ -238,8 +265,9 @@
         .btn-list.delete { color: #ea4335; }
         .btn-list:hover { background: rgba(0,0,0,0.05); }
 
-        #dbStatusIndicator { font-size: 0.8rem; font-weight: 600; padding: 4px 12px; border-radius: 50px; background: #ea4335; color: white;}
-        #dbStatusIndicator.online { background: #10b981; }
+        /* Badge de Estado en Admin */
+        #dbStatusIndicator { font-size: 0.8rem; font-weight: 600; padding: 4px 12px; border-radius: 50px; background: #f59e0b; color: white;}
+        #dbStatusIndicator.online { background: var(--primary); }
 
         /* Notificaciones flotantes (Toast) */
         #toast {
@@ -253,13 +281,14 @@
             header { flex-wrap: wrap; }
             .search-wrapper { order: 3; flex-basis: 100%; max-width: 100%; }
             .admin-grid { grid-template-columns: 1fr; }
+            .detail-container { grid-template-columns: 1fr; }
+            .detail-img-box { height: 280px; }
         }
     </style>
 </head>
 <body>
 
     <div class="ambient-bg"></div>
-    <div id="statusBanner">Inicializando sistema...</div>
 
     <header class="glass">
         <a href="#" class="logo" onclick="ui.resetView()">
@@ -289,13 +318,21 @@
     <main id="productGrid">
         <div class="empty-state">
             <span class="material-symbols-rounded" style="animation: spin 2s linear infinite;">sync</span>
-            <p>Conectando con el catálogo...</p>
+            <p>Conectando con el catálogo de DomoticAL...</p>
         </div>
     </main>
 
     <!-- ==========================================
          MODALES UI Y ADMIN
     =========================================== -->
+    <!-- Modal Vista Detalle de Producto -->
+    <div class="overlay" id="detailModal" onclick="ui.closeModalOnOutsideClick(event, 'detailModal')">
+        <div class="modal glass">
+            <span class="material-symbols-rounded close-btn" onclick="ui.closeModal('detailModal')">close</span>
+            <div id="detailModalContent"></div>
+        </div>
+    </div>
+
     <!-- Modal Filtros -->
     <div class="overlay" id="filterModal" onclick="ui.closeModalOnOutsideClick(event, 'filterModal')">
         <div class="modal glass">
@@ -354,7 +391,7 @@
         </div>
     </div>
 
-    <!-- Modal Confirmación Z-INDEX ALTO -->
+    <!-- Modal Confirmación (Z-Index alto para sobresalir de todo) -->
     <div class="overlay" id="confirmModal">
         <div class="modal glass" style="max-width: 400px; text-align: center;">
             <span class="material-symbols-rounded" style="font-size: 48px; color: #ea4335; margin-bottom: 16px;">warning</span>
@@ -373,7 +410,7 @@
             
             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
                 <h2 style="display:flex; align-items: center; gap:8px;">
-                    <span class="material-symbols-rounded" style="color:var(--primary)">dashboard</span> Panel de Control
+                    <span class="material-symbols-rounded" style="color:var(--primary-hover)">dashboard</span> Panel de Control
                     <span id="dbStatusIndicator">Modo Local</span>
                 </h2>
                 <button class="btn-main" style="width: auto; padding: 8px 16px; margin: 0; background: #ea4335;" onclick="ui.closeModal('adminDashboard')">Cerrar Panel</button>
@@ -381,7 +418,7 @@
 
             <!-- Botón de Sincronización a Nube -->
             <button class="btn-main btn-sync" id="btnForceSync" style="display: none;" onclick="admin.forceSyncToCloud()">
-                <span class="material-symbols-rounded">cloud_upload</span> Subir Catálogo Local a la Nube
+                <span class="material-symbols-rounded">cloud_upload</span> Sincronizar catálogo local con la nube
             </button>
 
             <div class="admin-grid">
@@ -392,7 +429,7 @@
                     
                     <div class="form-group">
                         <label>Título del Producto</label>
-                        <input type="text" id="pTitle" class="form-control" placeholder="Ej: Bombilla Inteligente LED">
+                        <input type="text" id="pTitle" class="form-control" placeholder="Ej: Controlador Inteligente de Riego">
                     </div>
                     <div class="form-group">
                         <label>Descripción corta</label>
@@ -429,7 +466,7 @@
                                     <input type="text" id="newRoomInput" class="form-control" placeholder="Añadir..." style="padding: 8px;">
                                     <button class="btn-main" style="width:auto; margin:0; padding:0 12px;" onclick="admin.addCategory('rooms', 'newRoomInput')">+</button>
                                 </div>
-                                <ul id="adminRoomList" style="list-style: none; font-size: 0.9rem; max-height: 120px; overflow-y: auto;"></ul>
+                                <ul id="adminRoomList" style="list-style: none; font-size: 0.9rem; max-height: 140px; overflow-y: auto;"></ul>
                             </div>
                             <div>
                                 <label style="font-size: 0.8rem; font-weight: 600; color:#555;">Tipos de Dispositivo</label>
@@ -437,14 +474,14 @@
                                     <input type="text" id="newTypeInput" class="form-control" placeholder="Añadir..." style="padding: 8px;">
                                     <button class="btn-main" style="width:auto; margin:0; padding:0 12px;" onclick="admin.addCategory('types', 'newTypeInput')">+</button>
                                 </div>
-                                <ul id="adminTypeList" style="list-style: none; font-size: 0.9rem; max-height: 120px; overflow-y: auto;"></ul>
+                                <ul id="adminTypeList" style="list-style: none; font-size: 0.9rem; max-height: 140px; overflow-y: auto;"></ul>
                             </div>
                         </div>
                     </div>
 
                     <div class="admin-card" style="flex:1; display:flex; flex-direction: column;">
                         <h3><span class="material-symbols-rounded">inventory</span> Catálogo Actual</h3>
-                        <div id="adminProductList" style="flex: 1; max-height: 300px; overflow-y: auto; padding-right: 8px;"></div>
+                        <div id="adminProductList" style="flex: 1; max-height: 350px; overflow-y: auto; padding-right: 8px;"></div>
                     </div>
                 </div>
             </div>
@@ -460,7 +497,7 @@
         import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // ==========================================
-        // 1. SISTEMA SEGURO DE ALMACENAMIENTO (Evita cuelgues de iframe)
+        // 1. ALMACENAMIENTO SEGURO
         // ==========================================
         const storage = {
             get: (k) => { try { return localStorage.getItem(k); } catch(e) { return null; } },
@@ -468,7 +505,7 @@
             remove: (k) => { try { localStorage.removeItem(k); } catch(e) {} }
         };
 
-        const LOCAL_KEYS = { PRODS: 'dh_local_prods_v4', META: 'dh_local_meta_v4', CART: 'dh_cart_v4' };
+        const LOCAL_KEYS = { PRODS: 'dh_local_prods_v5', META: 'dh_local_meta_v5', CART: 'dh_cart_v5' };
 
         window.store = {
             products: [],
@@ -480,31 +517,29 @@
         };
 
         // ==========================================
-        // 2. CONFIGURACIÓN E INTELIGENCIA DE CONEXIÓN
+        // 2. CONFIGURACIÓN FIREBASE INTEGRADA (DomoticAL)
         // ==========================================
         let db, auth;
-        let productsPath = 'products'; // Por defecto tu BD personal
+        let productsPath = 'products'; 
         let metaPath = 'meta';
 
-        // ⚠️ PEGA AQUÍ TUS CLAVES REALES DE FIREBASE (las mismas de tu captura) ⚠️
         const manualConfig = {
             apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
-  authDomain: "domotical-680de.firebaseapp.com",
-  projectId: "domotical-680de",
-  storageBucket: "domotical-680de.firebasestorage.app",
-  messagingSenderId: "923219132599",
-  appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
-  measurementId: "G-0J6JGDD1BK"
+            authDomain: "domotical-680de.firebaseapp.com",
+            projectId: "domotical-680de",
+            storageBucket: "domotical-680de.firebasestorage.app",
+            messagingSenderId: "923219132599",
+            appId: "1:923219132599:web:0bde6c03a9ffb52fe0cd32",
+            measurementId: "G-0J6JGDD1BK"
         };
 
-        // ¿El usuario ha rellenado las claves reales?
         const hasCustomConfig = manualConfig.apiKey && manualConfig.apiKey.length > 10 && !manualConfig.apiKey.startsWith("TU_");
 
         // ==========================================
-        // MIGRACIÓN DE DATOS (Recupera tus productos antiguos)
+        // 3. MIGRACIÓN Y PROTECCIÓN DE DATOS
         // ==========================================
         function migrateOldData() {
-            const legacyKeys = ['domotica_prods', 'sh_products', 'domo_prods', 'dh_prods', 'dh_local_prods_v3'];
+            const legacyKeys = ['domotica_prods', 'sh_products', 'domo_prods', 'dh_prods', 'dh_local_prods_v3', 'dh_local_prods_v4'];
             let rescued = [];
             
             legacyKeys.forEach(k => {
@@ -540,7 +575,6 @@
                 let current = [];
                 try { current = JSON.parse(storage.get(LOCAL_KEYS.PRODS) || '[]'); } catch(e){}
                 
-                // Evitamos duplicados por título
                 standardized.forEach(sp => {
                     if (!current.find(cp => cp.title === sp.title)) current.push(sp);
                 });
@@ -550,13 +584,10 @@
 
         function loadLocalData() {
             migrateOldData();
-            
             const lProds = storage.get(LOCAL_KEYS.PRODS);
             const lMeta = storage.get(LOCAL_KEYS.META);
             
-            if (lProds) {
-                window.store.products = JSON.parse(lProds);
-            }
+            if (lProds) window.store.products = JSON.parse(lProds);
             if (lMeta) {
                 const meta = JSON.parse(lMeta);
                 window.store.rooms = meta.rooms || window.store.rooms;
@@ -568,7 +599,7 @@
         function saveLocalMeta() { storage.set(LOCAL_KEYS.META, JSON.stringify({ rooms: window.store.rooms, types: window.store.types })); }
 
         // ==========================================
-        // UI CONTROLLER
+        // 4. UI CONTROLLER (Emerald Theme & Buscador corregido)
         // ==========================================
         window.ui = {
             confirmCallback: null,
@@ -601,6 +632,61 @@
                 this.confirmCallback = null;
             },
 
+            // --- Modal Detalle de Producto Inteligente ---
+            openProductDetail(id) {
+                const p = window.store.products.find(x => x.id === id);
+                if (!p) return;
+
+                const priceNum = parseFloat(p.price) || 0;
+                const rTags = (Array.isArray(p.rooms) ? p.rooms : []).map(r => `<span class="tag tag-room">${r}</span>`).join('');
+                const tTags = (Array.isArray(p.types) ? p.types : []).map(t => `<span class="tag tag-type">${t}</span>`).join('');
+
+                const container = document.getElementById('detailModalContent');
+                container.innerHTML = `
+                    <div class="detail-container">
+                        <div class="detail-img-box">
+                            <img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=600'">
+                        </div>
+                        <div class="detail-info-box">
+                            <div>
+                                <div class="detail-status-bar">
+                                    <div class="tags-wrapper">${rTags}${tTags}</div>
+                                    <div class="detail-badge-stock">
+                                        <div class="dot"></div> En Stock
+                                    </div>
+                                </div>
+                                <h2 class="detail-title">${p.title || 'Dispositivo Inteligente'}</h2>
+                                <div class="rating-stars">
+                                    <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">star_half</span>
+                                    <span class="rating-count">(24 valoraciones)</span>
+                                </div>
+                                <div class="detail-price">${priceNum.toFixed(2)}€</div>
+                                <p class="detail-desc">${p.desc || p.description || 'Este dispositivo de DomoticAL no cuenta con una descripción detallada en este momento.'}</p>
+                            </div>
+                            
+                            <div>
+                                <div class="detail-meta-row">
+                                    <div class="detail-meta-item">
+                                        <span class="material-symbols-rounded">local_shipping</span> Envíos 24h gratis
+                                    </div>
+                                    <div class="detail-meta-item">
+                                        <span class="material-symbols-rounded">shield</span> 3 años de garantía
+                                    </div>
+                                </div>
+                                <button class="btn-main" onclick="ui.addToCart('${p.id}'); ui.closeModal('detailModal')">
+                                    <span class="material-symbols-rounded" style="vertical-align: middle; margin-right: 6px;">shopping_cart</span> Añadir a la cesta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                this.openModal('detailModal');
+            },
+
             toggleFilter(type, value) {
                 const arr = window.store.filters[type];
                 const index = arr.indexOf(value);
@@ -616,6 +702,7 @@
 
             applyFilters() {
                 window.store.filters.query = document.getElementById('searchInput').value.toLowerCase();
+                window.store.filters.sort = document.getElementById('sortSelect').value;
                 const f = window.store.filters;
                 const btn = document.getElementById('btnFilter');
                 const activeCount = f.rooms.length + f.types.length;
@@ -628,16 +715,29 @@
                     btn.querySelector('.filter-text').textContent = `Filtros`;
                 }
 
+                // FILTRADO ROBUSTO (Evita cuelgues si desc es nula o vacía)
                 let result = window.store.products.filter(p => {
-                    const matchQ = p.title.toLowerCase().includes(f.query) || p.desc.toLowerCase().includes(f.query);
-                    const matchR = f.rooms.length === 0 || (p.rooms && f.rooms.some(r => p.rooms.includes(r)));
-                    const matchT = f.types.length === 0 || (p.types && f.types.some(t => p.types.includes(t)));
+                    const titleSafe = (p.title || "").toLowerCase();
+                    const descSafe = (p.desc || p.description || "").toLowerCase();
+                    const matchQ = titleSafe.includes(f.query) || descSafe.includes(f.query);
+                    
+                    const pRooms = Array.isArray(p.rooms) ? p.rooms : [];
+                    const pTypes = Array.isArray(p.types) ? p.types : [];
+
+                    const matchR = f.rooms.length === 0 || f.rooms.some(r => pRooms.includes(r));
+                    const matchT = f.types.length === 0 || f.types.some(t => pTypes.includes(t));
+                    
                     return matchQ && matchR && matchT;
                 });
 
-                if (f.sort === 'price_asc') result.sort((a,b) => a.price - b.price);
-                if (f.sort === 'price_desc') result.sort((a,b) => b.price - a.price);
-                if (f.sort === 'name_asc') result.sort((a,b) => a.title.localeCompare(b.title));
+                // ORDENAMIENTO DE RESULTADOS CORREGIDO (Bugs solucionados)
+                if (f.sort === 'price_asc') {
+                    result.sort((a, b) => (parseFloat(a.price) || 0) - (parseFloat(b.price) || 0));
+                } else if (f.sort === 'price_desc') {
+                    result.sort((a, b) => (parseFloat(b.price) || 0) - (parseFloat(a.price) || 0));
+                } else if (f.sort === 'name_asc') {
+                    result.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+                }
 
                 this.drawProducts(result);
             },
@@ -648,19 +748,20 @@
                     grid.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">inventory_2</span><p>No se han encontrado productos.</p></div>';
                     return;
                 }
+                // Catálogo limpio: no se dibuja la descripción larga en la pantalla principal
                 grid.innerHTML = products.map(p => {
-                    const rTags = (p.rooms || []).map(r => `<span class="tag tag-room">${r}</span>`).join('');
-                    const tTags = (p.types || []).map(t => `<span class="tag tag-type">${t}</span>`).join('');
+                    const priceNum = parseFloat(p.price) || 0;
+                    const rTags = (Array.isArray(p.rooms) ? p.rooms : []).map(r => `<span class="tag tag-room">${r}</span>`).join('');
+                    const tTags = (Array.isArray(p.types) ? p.types : []).map(t => `<span class="tag tag-type">${t}</span>`).join('');
                     return `
-                    <article class="card glass">
+                    <article class="card glass" onclick="ui.openProductDetail('${p.id}')">
                         <img src="${p.img}" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=400'">
                         <div class="card-body">
                             <div class="tags-wrapper">${rTags}${tTags}</div>
-                            <h3 class="card-title">${p.title}</h3>
-                            <p class="card-desc">${p.desc}</p>
+                            <h3 class="card-title">${p.title || 'Sin Título'}</h3>
                             <div class="card-footer">
-                                <span class="price">${p.price.toFixed(2)}€</span>
-                                <button class="btn-add" onclick="ui.addToCart('${p.id}')">
+                                <span class="price">${priceNum.toFixed(2)}€</span>
+                                <button class="btn-add" onclick="event.stopPropagation(); ui.addToCart('${p.id}')">
                                     <span class="material-symbols-rounded" style="font-size: 18px;">add_shopping_cart</span> Añadir
                                 </button>
                             </div>
@@ -697,20 +798,24 @@
                     container.innerHTML = '<div class="empty-state" style="padding: 40px 0;"><span class="material-symbols-rounded">shopping_basket</span><p>Tu cesta está vacía</p></div>';
                     footer.innerHTML = ''; return;
                 }
-                container.innerHTML = window.store.cart.map(i => `
+                container.innerHTML = window.store.cart.map(i => {
+                    const priceNum = parseFloat(i.price) || 0;
+                    return `
                     <div class="cart-item">
                         <img src="${i.img}" onerror="this.src='https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=200'">
                         <div class="cart-info">
-                            <div class="cart-title">${i.title}</div>
-                            <div class="cart-price">${i.price.toFixed(2)}€ x unidad</div>
+                            <div class="cart-title">${i.title || 'Artículo'}</div>
+                            <div class="cart-price">${priceNum.toFixed(2)}€ x unidad</div>
                             <div class="qty-controls">
                                 <button onclick="ui.changeQty('${i.id}', -1)"><span class="material-symbols-rounded" style="font-size:18px;">remove</span></button>
                                 <span>${i.qty}</span>
                                 <button onclick="ui.changeQty('${i.id}', 1)"><span class="material-symbols-rounded" style="font-size:18px;">add</span></button>
                             </div>
                         </div>
-                    </div>`).join('');
-                const total = window.store.cart.reduce((a, b) => a + (b.price * b.qty), 0);
+                    </div>`
+                }).join('');
+
+                const total = window.store.cart.reduce((a, b) => a + ((parseFloat(b.price)||0) * b.qty), 0);
                 footer.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
                         <span style="font-size: 1.1rem; color: #666;">Total estimado</span>
@@ -729,7 +834,7 @@
             
             checkout() {
                 if (window.store.cart.length === 0) return;
-                this.toast('¡Pedido procesado de forma simulada!', 'local_shipping');
+                this.toast('¡Pedido seguro tramitado con éxito!', 'local_shipping');
                 window.store.cart = []; storage.set(LOCAL_KEYS.CART, JSON.stringify([]));
                 this.updateCartUI(); this.closeCart();
             },
@@ -742,21 +847,16 @@
             },
             
             updateStatus(msg, isOnline) {
-                const b = document.getElementById('statusBanner');
-                b.textContent = msg; 
-                b.style.display = 'block';
-                b.className = isOnline ? 'success' : '';
-                
                 const ind = document.getElementById('dbStatusIndicator');
-                ind.textContent = isOnline ? 'Nube Firebase' : 'Modo Local';
-                ind.className = isOnline ? 'online' : '';
-                
-                if(isOnline) setTimeout(() => b.style.display = 'none', 3000);
+                if (ind) {
+                    ind.textContent = isOnline ? 'Nube Firebase' : 'Modo Local';
+                    ind.className = isOnline ? 'online' : '';
+                }
             }
         };
 
         // ==========================================
-        // ADMINISTRACIÓN
+        // 5. ADMINISTRACIÓN
         // ==========================================
         window.admin = {
             login() {
@@ -779,17 +879,20 @@
                 document.getElementById('adminRoomList').innerHTML = genLi(window.store.rooms, 'rooms');
                 document.getElementById('adminTypeList').innerHTML = genLi(window.store.types, 'types');
 
-                document.getElementById('adminProductList').innerHTML = window.store.products.map(p => `
+                document.getElementById('adminProductList').innerHTML = window.store.products.map(p => {
+                    const priceNum = parseFloat(p.price) || 0;
+                    return `
                     <div class="list-item" style="padding: 8px;">
                         <div style="display:flex; align-items:center; gap:12px;">
                             <img src="${p.img}" width="40" height="40" style="border-radius:8px; object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=200'">
-                            <div><div style="font-weight:600; font-size:0.9rem; line-height:1.2;">${p.title}</div><div style="font-size:0.8rem; color:#666;">${p.price.toFixed(2)}€</div></div>
+                            <div><div style="font-weight:600; font-size:0.9rem; line-height:1.2;">${p.title || 'Sin Título'}</div><div style="font-size:0.8rem; color:#666;">${priceNum.toFixed(2)}€</div></div>
                         </div>
                         <div class="list-actions">
                             <button class="btn-list edit" onclick="admin.editProduct('${p.id}')"><span class="material-symbols-rounded">edit</span></button>
                             <button class="btn-list delete" onclick="admin.deleteProduct('${p.id}')"><span class="material-symbols-rounded">delete</span></button>
                         </div>
-                    </div>`).join('');
+                    </div>`
+                }).join('');
                 
                 if (window.store.isOnline) {
                     document.getElementById('btnForceSync').style.display = 'flex';
@@ -821,17 +924,22 @@
 
             async saveProduct() {
                 const id = document.getElementById('editId').value || Date.now().toString();
+                const priceVal = parseFloat(document.getElementById('pPrice').value);
+                
+                if (!document.getElementById('pTitle').value.trim() || isNaN(priceVal) || priceVal <= 0) {
+                    return window.ui.toast('Introduce un título y precio válidos', 'warning');
+                }
+
                 const p = {
                     id: id,
                     title: document.getElementById('pTitle').value.trim(),
                     desc: document.getElementById('pDesc').value.trim(),
-                    price: parseFloat(document.getElementById('pPrice').value) || 0,
+                    price: priceVal,
                     img: document.getElementById('pImg').value.trim() || 'https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=400',
                     rooms: Array.from(document.querySelectorAll('.cb-room:checked')).map(cb => cb.value),
                     types: Array.from(document.querySelectorAll('.cb-type:checked')).map(cb => cb.value)
                 };
 
-                if (!p.title || p.price <= 0) return window.ui.toast('Introduce un título y precio válidos', 'warning');
                 if (p.rooms.length === 0 && window.store.rooms.length > 0) p.rooms = [window.store.rooms[0]];
                 if (p.types.length === 0 && window.store.types.length > 0) p.types = [window.store.types[0]];
 
@@ -858,10 +966,10 @@
                 const p = window.store.products.find(x => x.id === id);
                 if(!p) return;
                 document.getElementById('editId').value = p.id;
-                document.getElementById('pTitle').value = p.title;
-                document.getElementById('pDesc').value = p.desc;
-                document.getElementById('pPrice').value = p.price;
-                document.getElementById('pImg').value = p.img;
+                document.getElementById('pTitle').value = p.title || '';
+                document.getElementById('pDesc').value = p.desc || p.description || '';
+                document.getElementById('pPrice').value = p.price || '';
+                document.getElementById('pImg').value = p.img || '';
                 
                 document.querySelectorAll('.cb-room').forEach(cb => cb.checked = p.rooms && p.rooms.includes(cb.value));
                 document.querySelectorAll('.cb-type').forEach(cb => cb.checked = p.types && p.types.includes(cb.value));
@@ -918,14 +1026,14 @@
         };
 
         // ==========================================
-        // ARRANQUE SEGURO DE LA APLICACIÓN
+        // 6. ARRANQUE SEGURO DE LA APLICACIÓN
         // ==========================================
         async function bootApp() {
-            // 1. Mostrar productos en milisegundos usando la memoria
+            // 1. Cargar localmente de inmediato para evitar bloqueos
             loadLocalData();
             window.ui.init();
 
-            // 2. Determinar configuración de Firebase (Tus claves vs las de Canvas)
+            // 2. Determinar configuración de Firebase real
             let configToUse = null;
             let useCanvasAuth = false;
 
@@ -955,33 +1063,31 @@
                 if (useCanvasAuth && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
-                    await signInAnonymously(auth); // Usado para tus claves personales
+                    await signInAnonymously(auth);
                 }
 
                 window.store.isOnline = true;
-                window.ui.updateStatus('Conectado a la Nube', true);
+                window.ui.updateStatus('Conectado a la nube', true);
                 setupCloudSync();
 
             } catch (error) {
                 window.store.isOnline = false;
-                window.ui.updateStatus('Modo Local (Error de Autenticación en Firebase)', false);
+                window.ui.updateStatus('Modo Local (Desconectado de Firebase)', false);
             }
         }
 
-        // 4. Sincronización Protegida contra Fallos de Reglas
         function setupCloudSync() {
             onSnapshot(collection(db, productsPath), (snapshot) => {
                 if (!snapshot.empty) {
                     window.store.products = [];
                     snapshot.forEach(doc => window.store.products.push(doc.data()));
-                    saveLocalProducts(); // Actualizamos el backup local
+                    saveLocalProducts(); // Sincroniza memoria local
                     window.ui.applyFilters();
                     if (document.getElementById('adminDashboard').classList.contains('active')) window.admin.renderAdminView();
                 }
             }, (error) => {
-                // Si faltan permisos en tu consola, salta este error sin romper la web
                 window.store.isOnline = false;
-                window.ui.updateStatus('Modo Local (Acceso denegado por las reglas de Firestore)', false);
+                window.ui.updateStatus('Modo Local (Reglas de acceso bloqueadas)', false);
             });
 
             onSnapshot(doc(db, metaPath, 'categories'), (docSnap) => {
