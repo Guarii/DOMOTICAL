@@ -39,8 +39,12 @@
             overflow-x: hidden;
         }
 
-        /* Ajuste específico para el logo SVG */
-        .logo-img { height: 32px; width: auto; display: block; }
+        /* Ajuste específico para el logo SVG - Colores Originales */
+        .logo-img { 
+            height: 32px; 
+            width: auto; 
+            display: block; 
+        }
 
         .material-symbols-rounded.filled { font-variation-settings: 'FILL' 1; }
 
@@ -69,7 +73,8 @@
 
         .logo {
             font-size: 1.5rem; font-weight: 700; text-decoration: none;
-            color: var(--primary-hover); display: flex; align-items: center; gap: 12px;
+            color: var(--on-surface);
+            display: flex; align-items: center; gap: 12px;
             letter-spacing: -0.5px;
         }
 
@@ -176,7 +181,7 @@
         .sort-select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ccc; font-family: inherit; font-size: 1rem; outline: none;}
 
         /* ========================================================
-           VISTA PREVIA (DETAIL MODAL PREMIUM EDGE-TO-EDGE)
+           VISTA PREVIA (DETAIL MODAL PREMIUM EDGE-TO-EDGE 4:3)
         ======================================================== */
         #detailModal .modal { 
             width: 95%; max-width: 950px; padding: 0; overflow: hidden; 
@@ -184,25 +189,28 @@
             display: flex; max-height: 85vh; 
         }
         
-        .detail-container { display: flex; width: 100%; min-height: 520px; align-items: stretch;}
+        .detail-container { display: flex; width: 100%; align-items: stretch;}
         
-        /* Contenedor Izquierdo: La imagen es parte del fondo, ocupando exactamente la mitad */
         .detail-img-box { 
-            width: 50%; position: relative; overflow: hidden; background: #f8f9fa;
+            width: 50%; 
+            aspect-ratio: 4/3;
+            position: relative; 
+            overflow: hidden; 
+            background: #f8f9fa;
         }
         .detail-img-box img { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            object-fit: cover; transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            object-fit: contain;
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         .detail-img-box:hover img { transform: scale(1.05); }
         
         .detail-img-overlay { 
             position: absolute; inset: 0; 
-            background: linear-gradient(to right, rgba(0,0,0,0.02), rgba(0,0,0,0.08)); 
+            background: linear-gradient(to right, rgba(0,0,0,0.01), rgba(0,0,0,0.05)); 
             pointer-events: none;
         }
         
-        /* Contenedor Derecho: Información con scroll propio */
         .detail-info-box { 
             width: 50%; padding: 48px 40px; display: flex; flex-direction: column; 
             overflow-y: auto; max-height: 85vh; background: white;
@@ -299,7 +307,6 @@
         .btn-list.delete { color: #ea4335; }
         .btn-list:hover { background: rgba(0,0,0,0.05); }
 
-        /* Badge de Estado en Admin */
         #dbStatusIndicator { font-size: 0.8rem; font-weight: 600; padding: 4px 12px; border-radius: 50px; background: #f59e0b; color: white;}
         #dbStatusIndicator.online { background: var(--primary); }
 
@@ -317,13 +324,11 @@
             .search-wrapper { order: 3; flex-basis: 100%; max-width: 100%; }
             .admin-grid { grid-template-columns: 1fr; }
             
-            /* Responsive para Modal Premium */
-            #detailModal .modal { max-height: 90vh; }
+            #detailModal .modal { max-height: 90vh; flex-direction: column; }
             .detail-container { flex-direction: column; }
-            /* En móvil la imagen retoma el aspect ratio exacto 4:3 en apaisado */
             .detail-img-box { width: 100%; height: auto; aspect-ratio: 4/3; padding: 0; border-right: none; }
-            .detail-img-box img { position: absolute; height: 100%; width: 100%; }
-            .detail-info-box { width: 100%; padding: 24px; max-height: none; }
+            .detail-img-box img { position: absolute; height: 100%; width: 100%; object-fit: contain;}
+            .detail-info-box { width: 100%; padding: 24px; max-height: none; overflow: visible;}
             .detail-meta-row { grid-template-columns: 1fr; gap: 12px; }
         }
     </style>
@@ -334,8 +339,7 @@
 
     <header class="glass">
         <a href="#" class="logo" onclick="ui.resetView()">
-            <!-- Integración del logo SVG subido a GitHub -->
-            <img src="DOMOTICAL.svg" alt="DomoticAL Logo" class="logo-img" onerror="this.style.display='none'">
+            <img src="DOMOTICAL.svg" alt="DomoticAL Logo" class="logo-img">
             DomoticAL
         </a>
         <div class="search-wrapper">
@@ -370,7 +374,7 @@
          MODALES UI Y ADMIN
     =========================================== -->
     
-    <!-- Modal Vista Detalle de Producto (Refinado y Premium) -->
+    <!-- Modal Vista Detalle de Producto -->
     <div class="overlay" id="detailModal" onclick="ui.closeModalOnOutsideClick(event, 'detailModal')">
         <div class="modal glass" id="detailModalContainer">
             <span class="material-symbols-rounded close-btn" onclick="ui.closeModal('detailModal')">close</span>
@@ -537,7 +541,7 @@
 
     <div id="toast"></div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs y Lógica Completa -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -647,7 +651,7 @@
         function saveLocalMeta() { storage.set(LOCAL_KEYS.META, JSON.stringify({ rooms: window.store.rooms, types: window.store.types })); }
 
         // ==========================================
-        // 4. UI CONTROLLER (DomoticAL Theme & Lógicas Infallibles)
+        // 4. UI CONTROLLER
         // ==========================================
         window.ui = {
             confirmCallback: null,
@@ -680,7 +684,7 @@
                 this.confirmCallback = null;
             },
 
-            // --- VISTA PREVIA DETALLADA (Nuevo Diseño Premium Edge-to-Edge) ---
+            // --- VISTA PREVIA DETALLADA (Nuevo Diseño Premium Edge-to-Edge 4:3) ---
             openProductDetail(id) {
                 const p = window.store.products.find(x => String(x.id) === String(id));
                 if (!p) return;
@@ -693,7 +697,7 @@
                 const container = document.getElementById('detailModalContent');
                 container.innerHTML = `
                     <div class="detail-container">
-                        <!-- Imagen actuando como fondo absoluto de su contenedor -->
+                        <!-- Imagen actuando como fondo absoluto de su contenedor (Relación 4:3 completa, Alargada) -->
                         <div class="detail-img-box">
                             <img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=600'">
                             <div class="detail-img-overlay"></div>
