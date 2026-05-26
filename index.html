@@ -108,7 +108,7 @@
         #statusBanner { display: none !important; }
 
         /* ========================================================
-           CATÁLOGO DE PRODUCTOS (GRID)
+           CATÁLOGO DE PRODUCTOS (GRID PRINCIPAL)
         ======================================================== */
         main {
             padding: 30px 5% 60px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;
@@ -121,7 +121,7 @@
         }
         .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(16, 185, 129, 0.3); }
         
-        /* Proporción 4:3 estricta para que coincida exactamente con la vista previa */
+        /* Proporción 4:3 estricta para el catálogo */
         .card-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; background: white; border-bottom: 1px solid #eee; display: block;}
         
         .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
@@ -133,7 +133,7 @@
         
         .card-title { font-weight: 600; font-size: 1.2rem; margin-bottom: auto; line-height: 1.2; padding-bottom: 20px;}
         
-        .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .price { font-weight: 700; font-size: 1.3rem; color: var(--on-surface); }
         
         .btn-add {
@@ -148,7 +148,7 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* ========================================================
-           MODALES CENTRALES Y OVERLAYS
+           MODALES CENTRALES Y OVERLAYS GENERALES
         ======================================================== */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -162,44 +162,41 @@
         
         .modal {
             width: 90%; max-width: 500px; max-height: 90vh; border-radius: var(--radius-xl);
-            padding: 32px; overflow-y: auto; position: relative;
+            padding: 32px; overflow-y: auto; position: relative; background: white;
             transform: translateY(20px); transition: 0.3s;
         }
         .overlay.active .modal { transform: translateY(0); }
         
-        .close-btn { position: absolute; top: 20px; right: 20px; cursor: pointer; color: #666; background: rgba(0,0,0,0.05); border-radius: 50%; padding: 4px; transition: 0.2s; z-index: 10; }
+        .close-btn { position: absolute; top: 16px; right: 16px; cursor: pointer; color: #666; background: rgba(0,0,0,0.05); border-radius: 50%; padding: 8px; transition: 0.2s; z-index: 10; display:flex; align-items:center; justify-content:center;}
         .close-btn:hover { background: rgba(0,0,0,0.1); color: #000; }
 
-        /* Chips de Filtro */
-        .filter-section { margin-bottom: 24px; }
-        .filter-section h4 { margin-bottom: 12px; font-size: 0.95rem; color: #444; }
-        .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
-        .filter-chip {
-            padding: 8px 16px; border-radius: var(--radius-pill); border: 1px solid #ddd;
-            background: white; cursor: pointer; font-size: 0.9rem; transition: 0.2s; user-select: none;
-        }
-        .filter-chip.selected { background: var(--primary); color: white; border-color: var(--primary); }
-        .sort-select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ccc; font-family: inherit; font-size: 1rem; outline: none;}
-
         /* ========================================================
-           VISTA PREVIA (DETAIL MODAL REFINADO PREMIUM)
+           VISTA PREVIA (DETAIL MODAL PREMIUM)
         ======================================================== */
-        #detailModal .modal { max-width: 950px; padding: 0; overflow: hidden; border-radius: var(--radius-xl); background: white; }
-        .detail-container { display: grid; grid-template-columns: 1fr 1fr; }
-        
-        /* Contenedor de la imagen como galería */
-        .detail-img-box { 
-            background: #f8f9fa; display: flex; align-items: center; justify-content: center; 
-            padding: 32px; border-right: 1px solid #eee; position: relative;
+        #detailModal .modal { 
+            width: 90%; max-width: 900px; padding: 0; overflow: hidden; 
+            border-radius: var(--radius-xl); background: white; 
+            display: flex; max-height: 85vh; /* Altura controlada */
         }
-        /* Mismo aspect-ratio: 4/3 que la tarjeta para una correlación visual perfecta */
+        .detail-container { display: flex; width: 100%; height: 100%; }
+        
+        /* Contenedor de la imagen (Lado izquierdo) */
+        .detail-img-box { 
+            width: 45%; background: #f8f9fa; display: flex; align-items: center; justify-content: center; 
+            padding: 24px; border-right: 1px solid #eee; position: relative;
+        }
+        /* La imagen mantiene 4:3 exacto como en el catálogo */
         .detail-img-box img { 
             width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: var(--radius-lg);
             box-shadow: var(--shadow-sm); transition: transform 0.4s ease; background: white;
         }
         .detail-img-box:hover img { transform: scale(1.03); }
         
-        .detail-info-box { padding: 40px; display: flex; flex-direction: column; overflow-y: auto; max-height: 90vh; }
+        /* Contenedor de información (Lado derecho con scroll propio) */
+        .detail-info-box { 
+            width: 55%; padding: 40px; display: flex; flex-direction: column; 
+            overflow-y: auto; /* Scroll independiente interno */
+        }
         
         .rating-stock-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #eee; }
         .rating-stars { display: flex; align-items: center; gap: 2px; color: #f59e0b; }
@@ -215,16 +212,16 @@
         .detail-price { font-size: 2.5rem; font-weight: 700; color: var(--on-surface); line-height: 1; letter-spacing: -1px;}
         .tax-info { font-size: 0.9rem; color: #888; font-weight: 500;}
         
-        .detail-desc { font-size: 1rem; color: #444; line-height: 1.6; margin-bottom: auto; padding: 20px; background: #f8f9fa; border-radius: var(--radius-lg); border: 1px solid #eee;}
+        .detail-desc { font-size: 1rem; color: #444; line-height: 1.6; margin-bottom: 32px; padding: 20px; background: #f8f9fa; border-radius: var(--radius-lg); border: 1px solid #eee; flex-grow: 1;}
         
-        .detail-actions { margin-top: 32px; }
+        .detail-actions { margin-top: auto; }
         .detail-meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
         .detail-meta-item { display: flex; align-items: flex-start; gap: 12px; font-size: 0.85rem; color: #666; }
         .detail-meta-item .material-symbols-rounded { font-size: 28px; color: var(--primary); }
         .detail-meta-item strong { color: var(--on-surface); display: block; margin-bottom: 2px; font-size: 0.95rem;}
         
         .detail-add-btn { 
-            width: 100%; padding: 16px; font-size: 1.1rem; border-radius: 16px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer;
+            width: 100%; padding: 18px; font-size: 1.1rem; border-radius: 16px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer;
             display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25); transition: 0.3s; font-family: inherit;
         }
         .detail-add-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(16, 185, 129, 0.35); background: var(--primary-hover);}
@@ -234,6 +231,19 @@
             70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
+
+        /* ========================================================
+           FILTROS (Modal Chips)
+        ======================================================== */
+        .filter-section { margin-bottom: 24px; }
+        .filter-section h4 { margin-bottom: 12px; font-size: 0.95rem; color: #444; }
+        .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+        .filter-chip {
+            padding: 8px 16px; border-radius: var(--radius-pill); border: 1px solid #ddd;
+            background: white; cursor: pointer; font-size: 0.9rem; transition: 0.2s; user-select: none;
+        }
+        .filter-chip.selected { background: var(--primary); color: white; border-color: var(--primary); }
+        .sort-select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ccc; font-family: inherit; font-size: 1rem; outline: none;}
 
         /* ========================================================
            DRAWER (Cajón Lateral) PARA EL CARRITO
@@ -265,7 +275,7 @@
         .qty-controls button { border: none; background: none; cursor: pointer; font-size: 1.2rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; justify-content: center;}
 
         /* ========================================================
-           ADMIN DASHBOARD
+           ADMIN DASHBOARD (Escala y estructura refinada)
         ======================================================== */
         #adminDashboard .modal { max-width: 980px; background: #f0fdf4; padding: 24px; } 
         .admin-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; margin-top: 20px;}
@@ -292,9 +302,11 @@
         .btn-list.delete { color: #ea4335; }
         .btn-list:hover { background: rgba(0,0,0,0.05); }
 
+        /* Badge de Estado en Admin */
         #dbStatusIndicator { font-size: 0.8rem; font-weight: 600; padding: 4px 12px; border-radius: 50px; background: #f59e0b; color: white;}
         #dbStatusIndicator.online { background: var(--primary); }
 
+        /* Notificaciones flotantes (Toast) */
         #toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
             background: #202124; color: white; padding: 12px 24px; border-radius: var(--radius-pill);
@@ -302,15 +314,19 @@
         }
         #toast.active { transform: translateX(-50%) translateY(0); }
 
+        /* Responsive Global */
         @media (max-width: 768px) {
             header { flex-wrap: wrap; }
             .search-wrapper { order: 3; flex-basis: 100%; max-width: 100%; }
             .admin-grid { grid-template-columns: 1fr; }
-            .detail-container { grid-template-columns: 1fr; }
-            .detail-img-box { border-right: none; border-bottom: 1px solid #eee; padding: 20px; }
-            .detail-img-box img { border-radius: var(--radius-lg); }
-            .detail-info-box { padding: 24px; }
-            .detail-meta-row { grid-template-columns: 1fr; }
+            
+            /* Responsive para Modal Premium */
+            #detailModal .modal { max-height: 90vh; }
+            .detail-container { flex-direction: column; }
+            .detail-img-box { width: 100%; padding: 20px; border-right: none; border-bottom: 1px solid #eee;}
+            .detail-img-box img { max-height: 250px; }
+            .detail-info-box { width: 100%; padding: 24px; }
+            .detail-meta-row { grid-template-columns: 1fr; gap: 12px; }
         }
     </style>
 </head>
@@ -442,6 +458,7 @@
             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
                 <h2 style="display:flex; align-items: center; gap:8px;">
                     <span class="material-symbols-rounded" style="color:var(--primary-hover)">dashboard</span> Panel de Control
+                    <!-- Estado de la nube -->
                     <span id="dbStatusIndicator">Modo Local</span>
                 </h2>
                 <button class="btn-main" style="width: auto; padding: 8px 16px; margin: 0; background: #ea4335;" onclick="ui.closeModal('adminDashboard')">Cerrar Panel</button>
@@ -536,7 +553,7 @@
             remove: (k) => { try { localStorage.removeItem(k); } catch(e) {} }
         };
 
-        const LOCAL_KEYS = { PRODS: 'domotical_local_prods_v7', META: 'domotical_local_meta_v7', CART: 'domotical_cart_v7' };
+        const LOCAL_KEYS = { PRODS: 'domotical_local_prods_final', META: 'domotical_local_meta_final', CART: 'domotical_cart_final' };
 
         window.store = {
             products: [],
@@ -548,12 +565,13 @@
         };
 
         // ==========================================
-        // 2. CONFIGURACIÓN FIREBASE INTEGRADA (DomoticAL)
+        // 2. CONFIGURACIÓN FIREBASE INTEGRADA
         // ==========================================
         let db, auth;
         let productsPath = 'products'; 
         let metaPath = 'meta';
 
+        // TUS CLAVES REALES DE DOMOTICAL FIJADAS AQUÍ
         const manualConfig = {
             apiKey: "AIzaSyBK6BsmANXLfwtI8U0gb3MuKTcuCMoYkls",
             authDomain: "domotical-680de.firebaseapp.com",
@@ -564,13 +582,11 @@
             measurementId: "G-0J6JGDD1BK"
         };
 
-        const hasCustomConfig = manualConfig.apiKey && manualConfig.apiKey.length > 10 && !manualConfig.apiKey.startsWith("TU_");
-
         // ==========================================
         // 3. MIGRACIÓN Y PROTECCIÓN DE DATOS
         // ==========================================
         function migrateOldData() {
-            const legacyKeys = ['domotica_prods', 'sh_products', 'domo_prods', 'dh_local_prods_v5', 'domotical_local_prods_v6'];
+            const legacyKeys = ['domotica_prods', 'sh_products', 'domo_prods', 'dh_prods', 'dh_local_prods_v5', 'domotical_local_prods_v6'];
             let rescued = [];
             
             legacyKeys.forEach(k => {
@@ -663,7 +679,7 @@
                 this.confirmCallback = null;
             },
 
-            // --- VISTA PREVIA DETALLADA (Nuevo Diseño Premium) ---
+            // --- VISTA PREVIA DETALLADA (Nuevo Diseño Premium con Aspect Ratio 4:3 y Altura Controlada) ---
             openProductDetail(id) {
                 const p = window.store.products.find(x => String(x.id) === String(id));
                 if (!p) return;
@@ -671,7 +687,7 @@
                 const priceNum = parseFloat(p.price) || 0;
                 const rTags = (Array.isArray(p.rooms) ? p.rooms : []).map(r => `<span class="tag tag-room">${r}</span>`).join('');
                 const tTags = (Array.isArray(p.types) ? p.types : []).map(t => `<span class="tag tag-type">${t}</span>`).join('');
-                const desc = p.desc || p.description || 'Este dispositivo inteligente de DomoticAL no cuenta con una descripción detallada. Ha sido diseñado para integrarse perfectamente en tu ecosistema digital garantizando máxima eficiencia y diseño vanguardista.';
+                const desc = p.desc || p.description || 'Este dispositivo inteligente de DomoticAL no cuenta con una descripción detallada en este momento. Destaca por su calidad de construcción premium, fácil integración en cualquier ecosistema y una inmejorable eficiencia energética para el hogar del futuro.';
 
                 const container = document.getElementById('detailModalContent');
                 container.innerHTML = `
@@ -1067,42 +1083,21 @@
         };
 
         // ==========================================
-        // 6. ARRANQUE SEGURO DE LA APLICACIÓN
+        // 6. ARRANQUE DE LA APLICACIÓN
         // ==========================================
         async function bootApp() {
             loadLocalData();
             window.ui.init();
 
-            let configToUse = null;
-            let useCanvasAuth = false;
-
-            if (hasCustomConfig) {
-                configToUse = manualConfig;
-                productsPath = 'products';
-                metaPath = 'meta';
-            } else if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                configToUse = JSON.parse(__firebase_config);
-                const aId = typeof __app_id !== 'undefined' ? __app_id : 'domotical-hub';
-                productsPath = `artifacts/${aId}/public/data/products`;
-                metaPath = `artifacts/${aId}/public/data/meta`;
-                useCanvasAuth = true;
-            }
-
-            if (!configToUse) {
-                window.ui.updateStatus('Modo Local (Firebase sin configurar)', false);
-                return;
-            }
+            // Desplegar tus credenciales directamente (Sobrescribe cualquier modo prueba de Canvas)
+            const configToUse = manualConfig;
 
             try {
                 const appObj = initializeApp(configToUse);
                 auth = getAuth(appObj);
                 db = getFirestore(appObj);
 
-                if (useCanvasAuth && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                await signInAnonymously(auth);
 
                 window.store.isOnline = true;
                 window.ui.updateStatus('Conectado a la nube', true);
@@ -1119,7 +1114,7 @@
                 if (!snapshot.empty) {
                     window.store.products = [];
                     snapshot.forEach(doc => window.store.products.push(doc.data()));
-                    saveLocalProducts();
+                    saveLocalProducts(); 
                     window.ui.applyFilters();
                     if (document.getElementById('adminDashboard').classList.contains('active')) window.admin.renderAdminView();
                 }
