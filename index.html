@@ -181,26 +181,29 @@
         .sort-select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ccc; font-family: inherit; font-size: 1rem; outline: none;}
 
         /* ========================================================
-           VISTA PREVIA (DETAIL MODAL PREMIUM EDGE-TO-EDGE 8:3)
+           VISTA PREVIA (DETAIL MODAL MATEMÁTICO 8:3)
         ======================================================== */
         #detailModal .modal { 
-            width: 100%; 
-            /* El min() asegura que no se desborde ni a lo ancho ni a lo alto de la pantalla */
-            max-width: min(1200px, 90vw, 220vh); 
+            width: 95vw; 
+            /* El ancho máximo no superará los 1200px ni un ancho que fuerce una altura > 85vh */
+            max-width: min(1200px, 226vh); 
             padding: 0; 
             overflow: hidden; 
             border-radius: var(--radius-xl); 
             background: white; 
-            display: flex; 
         }
         
-        .detail-container { display: flex; width: 100%; align-items: stretch;}
+        /* Contenedor Flex dictamina la proporción global */
+        .detail-container { 
+            display: flex; 
+            width: 100%; 
+            aspect-ratio: 8 / 3; /* PROPORCIÓN EXACTA PANORÁMICA 8:3 */
+        }
         
-        /* Mitad Izquierda (Imagen 4:3 Exacta al catálogo) */
+        /* Mitad Izquierda (Imagen). Al ser 50% de 8:3, su proporción matemática es exactamente 4:3 */
         .detail-img-box { 
             width: 50%; 
-            flex: 0 0 50%;
-            aspect-ratio: 4/3; /* PROPORCIÓN EXACTA PARA IGUALAR A LA TARJETA */
+            height: 100%; 
             position: relative; 
             overflow: hidden; 
             background: #f8f9fa; 
@@ -218,41 +221,42 @@
             pointer-events: none;
         }
         
-        /* Mitad Derecha: Información con scroll propio */
+        /* Mitad Derecha: Información con scroll interno si excede la altura dictada por el 8:3 */
         .detail-info-box { 
             width: 50%;
-            flex: 0 0 50%;
-            padding: 48px 40px; 
+            height: 100%;
+            padding: 36px 40px; 
             display: flex; 
             flex-direction: column; 
             overflow-y: auto; 
             background: white;
+            box-sizing: border-box;
         }
         
-        .rating-stock-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #eee; }
+        .rating-stock-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #eee; }
         .rating-stars { display: flex; align-items: center; gap: 2px; color: #f59e0b; }
-        .rating-stars .material-symbols-rounded { font-size: 26px; }
-        .rating-count { color: #666; font-size: 1rem; margin-left: 8px; font-weight: 500; text-decoration: underline; cursor: pointer;}
+        .rating-stars .material-symbols-rounded { font-size: 24px; }
+        .rating-count { color: #666; font-size: 0.95rem; margin-left: 8px; font-weight: 500; text-decoration: underline; cursor: pointer;}
         
-        .detail-badge-stock { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 700; color: #047857; background: #d1fae5; padding: 6px 14px; border-radius: var(--radius-pill); border: 1px solid #a7f3d0;}
+        .detail-badge-stock { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: #047857; background: #d1fae5; padding: 6px 14px; border-radius: var(--radius-pill); border: 1px solid #a7f3d0;}
         .detail-badge-stock .dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(16,185,129,0.5);}
         
-        .detail-title { font-size: 2.8rem; font-weight: 700; line-height: 1.15; margin-bottom: 16px; color: var(--on-surface); letter-spacing: -0.5px;}
+        .detail-title { font-size: 2.2rem; font-weight: 700; line-height: 1.15; margin-bottom: 12px; color: var(--on-surface); letter-spacing: -0.5px;}
         
-        .detail-price-box { display: flex; align-items: baseline; gap: 8px; margin-bottom: 24px; }
-        .detail-price { font-size: 3.2rem; font-weight: 700; color: var(--on-surface); line-height: 1; letter-spacing: -1px;}
-        .tax-info { font-size: 1rem; color: #888; font-weight: 500;}
+        .detail-price-box { display: flex; align-items: baseline; gap: 8px; margin-bottom: 20px; }
+        .detail-price { font-size: 2.5rem; font-weight: 700; color: var(--on-surface); line-height: 1; letter-spacing: -1px;}
+        .tax-info { font-size: 0.95rem; color: #888; font-weight: 500;}
         
-        .detail-desc { font-size: 1.1rem; color: #444; line-height: 1.6; margin-bottom: 32px; padding: 24px; background: #f8f9fa; border-radius: var(--radius-lg); border: 1px solid #eee; flex-grow: 1;}
+        .detail-desc { font-size: 1rem; color: #444; line-height: 1.6; margin-bottom: 24px; padding: 20px; background: #f8f9fa; border-radius: var(--radius-lg); border: 1px solid #eee; flex-shrink: 0;}
         
-        .detail-actions { margin-top: auto; }
-        .detail-meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
-        .detail-meta-item { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: #666; }
-        .detail-meta-item .material-symbols-rounded { font-size: 32px; color: var(--primary); }
-        .detail-meta-item strong { color: var(--on-surface); display: block; margin-bottom: 4px; font-size: 1.05rem;}
+        .detail-actions { margin-top: auto; flex-shrink: 0;}
+        .detail-meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .detail-meta-item { display: flex; align-items: flex-start; gap: 12px; font-size: 0.85rem; color: #666; }
+        .detail-meta-item .material-symbols-rounded { font-size: 28px; color: var(--primary); }
+        .detail-meta-item strong { color: var(--on-surface); display: block; margin-bottom: 2px; font-size: 0.95rem;}
         
         .detail-add-btn { 
-            width: 100%; padding: 20px; font-size: 1.2rem; border-radius: 16px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer;
+            width: 100%; padding: 16px; font-size: 1.15rem; border-radius: 16px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer;
             display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25); transition: 0.3s; font-family: inherit;
         }
         .detail-add-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(16, 185, 129, 0.35); background: var(--primary-hover);}
@@ -338,12 +342,12 @@
             .admin-grid { grid-template-columns: 1fr; }
             
             /* Responsive para Modal Premium */
-            #detailModal .modal { max-width: 95vw; max-height: 90vh; flex-direction: column; }
-            .detail-container { flex-direction: column; }
+            #detailModal .modal { max-height: 90vh; }
+            .detail-container { flex-direction: column; aspect-ratio: auto; }
             /* En móvil la imagen retoma el aspect ratio exacto 4:3 apilado */
-            .detail-img-box { width: 100%; height: auto; aspect-ratio: 4/3; flex: 0 0 auto; border-right: none; }
+            .detail-img-box { width: 100%; height: auto; aspect-ratio: 4/3; }
             .detail-img-box img { position: absolute; height: 100%; width: 100%; object-fit: cover;}
-            .detail-info-box { width: 100%; padding: 24px; flex: 1 1 auto; max-height: none; overflow-y: auto;}
+            .detail-info-box { width: 100%; height: auto; padding: 24px; overflow: visible;}
             .detail-meta-row { grid-template-columns: 1fr; gap: 12px; }
         }
     </style>
@@ -354,8 +358,7 @@
 
     <header class="glass">
         <a href="#" class="logo" onclick="ui.resetView()">
-            <!-- LOGO: Color original inalterado. -->
-            <img src="DOMOTICAL.svg" alt="DomoticAL Logo" class="logo-img" onerror="this.style.display='none'">
+            <img src="DOMOTICAL.svg" alt="DomoticAL Logo" class="logo-img">
             DomoticAL
         </a>
         <div class="search-wrapper">
@@ -700,7 +703,7 @@
                 this.confirmCallback = null;
             },
 
-            // --- VISTA PREVIA DETALLADA (Nuevo Diseño Premium Edge-to-Edge 8:3 y Estrellas dinámicas) ---
+            // --- VISTA PREVIA DETALLADA (Diseño Edge-to-Edge 8:3 Exacto y Estrellas) ---
             openProductDetail(id) {
                 const p = window.store.products.find(x => String(x.id) === String(id));
                 if (!p) return;
@@ -712,7 +715,7 @@
 
                 // Generación aleatoria y matemática de valoraciones
                 const ratingValue = (Math.random() * (5.0 - 4.0) + 4.0).toFixed(1);
-                const reviewCount = Math.floor(Math.random() * (600 - 45 + 1)) + 45; // Entre 45 y 600
+                const reviewCount = Math.floor(Math.random() * (600 - 45 + 1)) + 45; 
                 
                 let starsHtml = '';
                 for(let i = 1; i <= 5; i++) {
@@ -728,7 +731,7 @@
                 const container = document.getElementById('detailModalContent');
                 container.innerHTML = `
                     <div class="detail-container">
-                        <!-- Imagen actuando como fondo absoluto de su contenedor (Relación 4:3 completa, Alargada) -->
+                        <!-- Imagen bloqueada matemáticamente al 50% de la proporción 8:3 = 4:3 Exacto -->
                         <div class="detail-img-box">
                             <img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=600'">
                             <div class="detail-img-overlay"></div>
