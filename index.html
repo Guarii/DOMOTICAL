@@ -184,15 +184,15 @@
            VISTA PREVIA (DETAIL MODAL PREMIUM EDGE-TO-EDGE 8:3)
         ======================================================== */
         #detailModal .modal { 
-            width: 95vw; 
-            max-width: 1100px; /* Expandido para permitir una proporción panorámica real */
+            width: 90vw; 
+            max-width: 1400px; /* Aumentado masivamente para ocupar gran parte de la pantalla */
             aspect-ratio: 8/3; /* Proporción total 8:3 (4:3 imagen + 4:3 texto) */
             padding: 0; 
             overflow: hidden; 
             border-radius: var(--radius-xl); 
             background: white; 
             display: flex; 
-            max-height: 90vh; /* Límite de seguridad */
+            max-height: 85vh; /* Límite de seguridad para portátiles pequeños */
             height: auto;
         }
         
@@ -221,38 +221,38 @@
         /* Mitad Derecha (Texto 4:3) */
         .detail-info-box { 
             flex: 1; /* Ocupa la otra mitad */
-            padding: 48px 40px; 
+            padding: 56px 64px; /* Padding ampliado para la ventana más grande */
             display: flex; 
             flex-direction: column; 
-            overflow-y: auto; /* Evita que crezca la caja, hace scroll interno */
+            overflow-y: auto; 
             background: white;
             height: 100%;
         }
         
         .rating-stock-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #eee; }
         .rating-stars { display: flex; align-items: center; gap: 2px; color: #f59e0b; }
-        .rating-stars .material-symbols-rounded { font-size: 22px; }
-        .rating-count { color: #666; font-size: 0.9rem; margin-left: 8px; font-weight: 500; text-decoration: underline; cursor: pointer;}
+        .rating-stars .material-symbols-rounded { font-size: 26px; }
+        .rating-count { color: #666; font-size: 1rem; margin-left: 8px; font-weight: 500; text-decoration: underline; cursor: pointer;}
         
-        .detail-badge-stock { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: #047857; background: #d1fae5; padding: 6px 14px; border-radius: var(--radius-pill); border: 1px solid #a7f3d0;}
+        .detail-badge-stock { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 700; color: #047857; background: #d1fae5; padding: 6px 14px; border-radius: var(--radius-pill); border: 1px solid #a7f3d0;}
         .detail-badge-stock .dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(16,185,129,0.5);}
         
-        .detail-title { font-size: 2rem; font-weight: 700; line-height: 1.15; margin-bottom: 16px; color: var(--on-surface); letter-spacing: -0.5px;}
+        .detail-title { font-size: 2.8rem; font-weight: 700; line-height: 1.15; margin-bottom: 16px; color: var(--on-surface); letter-spacing: -0.5px;}
         
         .detail-price-box { display: flex; align-items: baseline; gap: 8px; margin-bottom: 24px; }
-        .detail-price { font-size: 2.5rem; font-weight: 700; color: var(--on-surface); line-height: 1; letter-spacing: -1px;}
-        .tax-info { font-size: 0.9rem; color: #888; font-weight: 500;}
+        .detail-price { font-size: 3.2rem; font-weight: 700; color: var(--on-surface); line-height: 1; letter-spacing: -1px;}
+        .tax-info { font-size: 1rem; color: #888; font-weight: 500;}
         
-        .detail-desc { font-size: 1rem; color: #444; line-height: 1.6; margin-bottom: 32px; padding: 20px; background: #f8f9fa; border-radius: var(--radius-lg); border: 1px solid #eee; flex-grow: 1;}
+        .detail-desc { font-size: 1.1rem; color: #444; line-height: 1.6; margin-bottom: 32px; padding: 24px; background: #f8f9fa; border-radius: var(--radius-lg); border: 1px solid #eee; flex-grow: 1;}
         
         .detail-actions { margin-top: auto; }
-        .detail-meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-        .detail-meta-item { display: flex; align-items: flex-start; gap: 12px; font-size: 0.85rem; color: #666; }
-        .detail-meta-item .material-symbols-rounded { font-size: 28px; color: var(--primary); }
-        .detail-meta-item strong { color: var(--on-surface); display: block; margin-bottom: 2px; font-size: 0.95rem;}
+        .detail-meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+        .detail-meta-item { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: #666; }
+        .detail-meta-item .material-symbols-rounded { font-size: 32px; color: var(--primary); }
+        .detail-meta-item strong { color: var(--on-surface); display: block; margin-bottom: 4px; font-size: 1.05rem;}
         
         .detail-add-btn { 
-            width: 100%; padding: 18px; font-size: 1.1rem; border-radius: 16px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer;
+            width: 100%; padding: 20px; font-size: 1.2rem; border-radius: 16px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer;
             display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25); transition: 0.3s; font-family: inherit;
         }
         .detail-add-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(16, 185, 129, 0.35); background: var(--primary-hover);}
@@ -698,7 +698,7 @@
                 this.confirmCallback = null;
             },
 
-            // --- VISTA PREVIA DETALLADA ---
+            // --- VISTA PREVIA DETALLADA (Nuevo Diseño Premium Edge-to-Edge 8:3 y Estrellas dinámicas) ---
             openProductDetail(id) {
                 const p = window.store.products.find(x => String(x.id) === String(id));
                 if (!p) return;
@@ -707,6 +707,21 @@
                 const rTags = (Array.isArray(p.rooms) ? p.rooms : []).map(r => `<span class="tag tag-room">${r}</span>`).join('');
                 const tTags = (Array.isArray(p.types) ? p.types : []).map(t => `<span class="tag tag-type">${t}</span>`).join('');
                 const desc = p.desc || p.description || 'Este dispositivo inteligente de DomoticAL no cuenta con una descripción detallada en este momento. Destaca por su calidad de construcción premium, fácil integración en cualquier ecosistema y una inmejorable eficiencia energética para el hogar del futuro.';
+
+                // Generación aleatoria y matemática de valoraciones
+                const ratingValue = (Math.random() * (5.0 - 4.0) + 4.0).toFixed(1);
+                const reviewCount = Math.floor(Math.random() * (600 - 45 + 1)) + 45; // Entre 45 y 600
+                
+                let starsHtml = '';
+                for(let i = 1; i <= 5; i++) {
+                    if (ratingValue >= i) {
+                        starsHtml += '<span class="material-symbols-rounded filled">star</span>';
+                    } else if (ratingValue >= i - 0.5) {
+                        starsHtml += '<span class="material-symbols-rounded filled">star_half</span>';
+                    } else {
+                        starsHtml += '<span class="material-symbols-rounded">star</span>';
+                    }
+                }
 
                 const container = document.getElementById('detailModalContent');
                 container.innerHTML = `
@@ -719,17 +734,13 @@
                         <div class="detail-info-box">
                             <div>
                                 <div class="tags-wrapper" style="margin-bottom: 20px;">${rTags}${tTags}</div>
-                                <div style="font-size: 0.75rem; color: var(--primary); margin-bottom: 8px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">By DomoticAL</div>
+                                <div style="font-size: 0.85rem; color: var(--primary); margin-bottom: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">By DomoticAL</div>
                                 <h2 class="detail-title">${p.title || 'Dispositivo Inteligente'}</h2>
                                 
                                 <div class="rating-stock-row">
                                     <div class="rating-stars">
-                                        <span class="material-symbols-rounded filled">star</span>
-                                        <span class="material-symbols-rounded filled">star</span>
-                                        <span class="material-symbols-rounded filled">star</span>
-                                        <span class="material-symbols-rounded filled">star</span>
-                                        <span class="material-symbols-rounded filled">star_half</span>
-                                        <span class="rating-count">4.8 (124 reseñas)</span>
+                                        ${starsHtml}
+                                        <span class="rating-count">${ratingValue} (${reviewCount} reseñas)</span>
                                     </div>
                                     <div class="detail-badge-stock">
                                         <span class="dot"></span> En Stock - Listo para enviar
@@ -758,7 +769,7 @@
                                     </div>
                                 </div>
                                 <button class="btn-main detail-add-btn" onclick="ui.addToCart('${p.id}'); ui.closeModal('detailModal')">
-                                    <span class="material-symbols-rounded" style="font-size: 24px;">shopping_cart</span> Añadir a la cesta
+                                    <span class="material-symbols-rounded" style="font-size: 26px;">shopping_cart</span> Añadir a la cesta
                                 </button>
                             </div>
                         </div>
