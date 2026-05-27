@@ -39,7 +39,7 @@
             overflow-x: hidden;
         }
 
-        /* Ajuste específico para el logo SVG - Colores Originales */
+        /* Ajuste específico para el logo SVG - Colores Originales Intactos */
         .logo-img { 
             height: 32px; 
             width: auto; 
@@ -181,39 +181,52 @@
         .sort-select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ccc; font-family: inherit; font-size: 1rem; outline: none;}
 
         /* ========================================================
-           VISTA PREVIA (DETAIL MODAL PREMIUM EDGE-TO-EDGE 4:3)
+           VISTA PREVIA (DETAIL MODAL PREMIUM EDGE-TO-EDGE 8:3)
         ======================================================== */
         #detailModal .modal { 
-            width: 95%; max-width: 950px; padding: 0; overflow: hidden; 
-            border-radius: var(--radius-xl); background: white; 
-            display: flex; max-height: 85vh; 
+            width: 95vw; 
+            max-width: 1100px; /* Expandido para permitir una proporción panorámica real */
+            aspect-ratio: 8/3; /* Proporción total 8:3 (4:3 imagen + 4:3 texto) */
+            padding: 0; 
+            overflow: hidden; 
+            border-radius: var(--radius-xl); 
+            background: white; 
+            display: flex; 
+            max-height: 90vh; /* Límite de seguridad */
+            height: auto;
         }
         
-        .detail-container { display: flex; width: 100%; align-items: stretch;}
+        .detail-container { display: flex; width: 100%; height: 100%; }
         
+        /* Mitad Izquierda (Imagen 4:3 Edge-to-Edge) */
         .detail-img-box { 
-            width: 50%; 
-            aspect-ratio: 4/3;
+            flex: 1; /* Ocupa exactamente la mitad */
             position: relative; 
             overflow: hidden; 
-            background: #f8f9fa;
+            background: #f8f9fa; 
         }
         .detail-img-box img { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            object-fit: contain;
+            object-fit: cover; /* La imagen cubre absolutamente todo su espacio 4:3 */
             transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         .detail-img-box:hover img { transform: scale(1.05); }
         
         .detail-img-overlay { 
             position: absolute; inset: 0; 
-            background: linear-gradient(to right, rgba(0,0,0,0.01), rgba(0,0,0,0.05)); 
+            background: linear-gradient(to right, rgba(0,0,0,0.01), rgba(0,0,0,0.1)); 
             pointer-events: none;
         }
         
+        /* Mitad Derecha (Texto 4:3) */
         .detail-info-box { 
-            width: 50%; padding: 48px 40px; display: flex; flex-direction: column; 
-            overflow-y: auto; max-height: 85vh; background: white;
+            flex: 1; /* Ocupa la otra mitad */
+            padding: 48px 40px; 
+            display: flex; 
+            flex-direction: column; 
+            overflow-y: auto; /* Evita que crezca la caja, hace scroll interno */
+            background: white;
+            height: 100%;
         }
         
         .rating-stock-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #eee; }
@@ -324,11 +337,11 @@
             .search-wrapper { order: 3; flex-basis: 100%; max-width: 100%; }
             .admin-grid { grid-template-columns: 1fr; }
             
-            #detailModal .modal { max-height: 90vh; flex-direction: column; }
+            /* Responsive Modal en móvil: Apilado vertical */
+            #detailModal .modal { aspect-ratio: auto; max-height: 90vh; }
             .detail-container { flex-direction: column; }
-            .detail-img-box { width: 100%; height: auto; aspect-ratio: 4/3; padding: 0; border-right: none; }
-            .detail-img-box img { position: absolute; height: 100%; width: 100%; object-fit: contain;}
-            .detail-info-box { width: 100%; padding: 24px; max-height: none; overflow: visible;}
+            .detail-img-box { width: 100%; aspect-ratio: 4/3; flex: none; border-right: none; }
+            .detail-info-box { width: 100%; padding: 24px; flex: 1; height: auto; }
             .detail-meta-row { grid-template-columns: 1fr; gap: 12px; }
         }
     </style>
@@ -339,7 +352,8 @@
 
     <header class="glass">
         <a href="#" class="logo" onclick="ui.resetView()">
-            <img src="DOMOTICAL.svg" alt="DomoticAL Logo" class="logo-img">
+            <!-- LOGO: Color original inalterado. -->
+            <img src="DOMOTICAL.svg" alt="DomoticAL Logo" class="logo-img" onerror="this.style.display='none'">
             DomoticAL
         </a>
         <div class="search-wrapper">
@@ -651,7 +665,7 @@
         function saveLocalMeta() { storage.set(LOCAL_KEYS.META, JSON.stringify({ rooms: window.store.rooms, types: window.store.types })); }
 
         // ==========================================
-        // 4. UI CONTROLLER
+        // 4. UI CONTROLLER 
         // ==========================================
         window.ui = {
             confirmCallback: null,
@@ -684,7 +698,7 @@
                 this.confirmCallback = null;
             },
 
-            // --- VISTA PREVIA DETALLADA (Nuevo Diseño Premium Edge-to-Edge 4:3) ---
+            // --- VISTA PREVIA DETALLADA ---
             openProductDetail(id) {
                 const p = window.store.products.find(x => String(x.id) === String(id));
                 if (!p) return;
