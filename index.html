@@ -184,49 +184,49 @@
            VISTA PREVIA (DETAIL MODAL PREMIUM EDGE-TO-EDGE 8:3)
         ======================================================== */
         #detailModal .modal { 
-            width: 90vw; 
-            max-width: 1400px; /* Aumentado masivamente para ocupar gran parte de la pantalla */
-            aspect-ratio: 8/3; /* Proporción total 8:3 (4:3 imagen + 4:3 texto) */
+            width: 100%; 
+            /* El min() asegura que no se desborde ni a lo ancho ni a lo alto de la pantalla */
+            max-width: min(1200px, 90vw, 220vh); 
             padding: 0; 
             overflow: hidden; 
             border-radius: var(--radius-xl); 
             background: white; 
             display: flex; 
-            max-height: 85vh; /* Límite de seguridad para portátiles pequeños */
-            height: auto;
         }
         
-        .detail-container { display: flex; width: 100%; height: 100%; }
+        .detail-container { display: flex; width: 100%; align-items: stretch;}
         
-        /* Mitad Izquierda (Imagen 4:3 Edge-to-Edge) */
+        /* Mitad Izquierda (Imagen 4:3 Exacta al catálogo) */
         .detail-img-box { 
-            flex: 1; /* Ocupa exactamente la mitad */
+            width: 50%; 
+            flex: 0 0 50%;
+            aspect-ratio: 4/3; /* PROPORCIÓN EXACTA PARA IGUALAR A LA TARJETA */
             position: relative; 
             overflow: hidden; 
             background: #f8f9fa; 
         }
         .detail-img-box img { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            object-fit: cover; /* La imagen cubre absolutamente todo su espacio 4:3 */
+            object-fit: cover; /* LLENADO EDGE-TO-EDGE IDÉNTICO AL CATÁLOGO */
             transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         .detail-img-box:hover img { transform: scale(1.05); }
         
         .detail-img-overlay { 
             position: absolute; inset: 0; 
-            background: linear-gradient(to right, rgba(0,0,0,0.01), rgba(0,0,0,0.1)); 
+            background: linear-gradient(to right, rgba(0,0,0,0.01), rgba(0,0,0,0.08)); 
             pointer-events: none;
         }
         
-        /* Mitad Derecha (Texto 4:3) */
+        /* Mitad Derecha: Información con scroll propio */
         .detail-info-box { 
-            flex: 1; /* Ocupa la otra mitad */
-            padding: 56px 64px; /* Padding ampliado para la ventana más grande */
+            width: 50%;
+            flex: 0 0 50%;
+            padding: 48px 40px; 
             display: flex; 
             flex-direction: column; 
             overflow-y: auto; 
             background: white;
-            height: 100%;
         }
         
         .rating-stock-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #eee; }
@@ -337,11 +337,13 @@
             .search-wrapper { order: 3; flex-basis: 100%; max-width: 100%; }
             .admin-grid { grid-template-columns: 1fr; }
             
-            /* Responsive Modal en móvil: Apilado vertical */
-            #detailModal .modal { aspect-ratio: auto; max-height: 90vh; }
+            /* Responsive para Modal Premium */
+            #detailModal .modal { max-width: 95vw; max-height: 90vh; flex-direction: column; }
             .detail-container { flex-direction: column; }
-            .detail-img-box { width: 100%; aspect-ratio: 4/3; flex: none; border-right: none; }
-            .detail-info-box { width: 100%; padding: 24px; flex: 1; height: auto; }
+            /* En móvil la imagen retoma el aspect ratio exacto 4:3 apilado */
+            .detail-img-box { width: 100%; height: auto; aspect-ratio: 4/3; flex: 0 0 auto; border-right: none; }
+            .detail-img-box img { position: absolute; height: 100%; width: 100%; object-fit: cover;}
+            .detail-info-box { width: 100%; padding: 24px; flex: 1 1 auto; max-height: none; overflow-y: auto;}
             .detail-meta-row { grid-template-columns: 1fr; gap: 12px; }
         }
     </style>
